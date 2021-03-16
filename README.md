@@ -1,0 +1,2 @@
+# WhaleCrew
+Crypto portfolio website
