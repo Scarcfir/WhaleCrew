@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+    <link rel="stylesheet" href="../static/css/user.css">
+
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <h1>Welcome to our Page</h1>
+
+            <h1>{{ user }}</h1>
+            <br>
+            <br>
+            <a class="nav-link" href="{% url 'IndexPage' %}">Strona Startowa</a>
+
+        </div>
+    </div>
+
+
+{% endblock %}

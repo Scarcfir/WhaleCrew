@@ -6,18 +6,22 @@
         <div id="formContent">
             <h1>Log In</h1>
             <br>
-            New to WhaleCrew? <a class="underlineHover" href="Create_Acc">Create Account</a>
+            New to WhaleCrew? <a class="underlineHover" href="{% url 'Sing_up' %}">Create Account</a>
             <br>
             <form method="post">
                 {% csrf_token %}
-                <input type="text" id="login" class="fadeIn second" name="login" placeholder="login">
-                <input type="text" id="password" class="fadeIn third" name="login" placeholder="password">
+                    {% if tekst == 1 %}
+                       !!! Invalid Username or Password !!!
+                    {% endif %}
+
+                    {{ form.username }}
+                    {{ form.password }}
                 <input type="submit" class="fadeIn fourth" value="Log In">
             </form>
 
             <!-- Remind Passowrd -->
             <div id="formFooter">
-                <a class="underlineHover" href="Forgot_Pass">Forgot Password?</a>
+                <a class="underlineHover" href="{% url 'Forgot_Pass' %}">Forgot Password?</a>
             </div>
 
         </div>

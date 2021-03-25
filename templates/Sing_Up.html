@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+    <link rel="stylesheet" href="../static/css/user.css">
+
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <h1>Create an Account</h1>
+            <br>
+            Already have an account? <a class="underlineHover" href="{% url 'Login' %}">Login</a>
+            <br>
+            <form method="post">
+                {% csrf_token %}
+                {% if error_user == 0 %}
+                    <br>  <p style="color:red">!!! Username already exist !!!</p><br>
+                {% endif %}
+                {{ form.username }}
+                {% if error_mail == 0 %}
+                    <br><p style="color:red">!!! Email already exist !!!</p><br>
+                {% endif %}
+                {% if mail_error == 1 %}
+                    <br><p style="color:red">!!! Wrong e-mail !!!</p><br>
+                {% endif %}
+                {{ form.email }}
+                {{ form.password1 }}
+                {{ form.password2 }}
+                <input type="submit" class="fadeIn fourth" value="Log In">
+            </form>
+
+            <!-- Remind Passowrd -->
+            <div id="formFooter">
+                <a class="underlineHover" href="{% url 'Forgot_Pass' %}">Forgot Password?</a>
+            </div>
+
+        </div>
+    </div>
+
+
+{% endblock %}

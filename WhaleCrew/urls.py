@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from account.views import LoginView, ForgotPass
+from account.views import LoginView, ForgotPass, SingUp, Contact
 from home.views import IndexView
 
 urlpatterns = [
@@ -23,4 +23,6 @@ urlpatterns = [
     path('', IndexView.as_view(), name='IndexPage'),
     path('login/', LoginView.as_view(), name='Login'),
     path('Forgot_Pass/', ForgotPass.as_view(), name='Forgot_Pass'),
+    path('Sing_up/', SingUp.as_view(), name='Sing_up'),
+    path('Contact/', Contact.as_view(), name='Contact'),
 ]
