@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.http import HttpResponse
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from account.forms import LoginForm, ForgotPassword, RegisterForm
 import re
 
@@ -20,7 +20,7 @@ class LoginView(View):
             user = authenticate(request, **form.cleaned_data)
             if user is not None:
                 login(request, user)
-                redirect_url = request.GET.get('next', 'index')
+                redirect_url = request.GET.get('next', 'IndexPage')
                 return redirect(redirect_url)
             else:
                 tekst = 1
@@ -77,11 +77,31 @@ class SingUp(View):
 
 
 class Contact(View):
-    pass
 
+    def get(self, request):
+        return render(request, "contact.html")
+
+    def post(self, request):
+        name = request.POST['txtName']
+        email = request.POST['txtEmail']
+        phonenumber = request.POST['txtPhone']
+        msg = request.POST['txtMsg']
+
+        print(name)
+        print(email)
+        print(phonenumber)
+        print(msg)
+        return render(request, "contact.html")
 
 def validateEmail(email):
     if len(email) > 6:
         if re.match(r'\b[\w.-]+@[\w.-]+.\w{2,4}\b', email) != None:
             return 1
     return 0
+
+
+class LogoutView(View):
+
+    def get(self, request):
+        logout(request)
+        return redirect('IndexPage')

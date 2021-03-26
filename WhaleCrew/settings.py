@@ -25,7 +25,7 @@ SECRET_KEY = 'o%&*5o$*)6pkwx^w(6vy76&b!n@_+7ww_^u6$pn83f5c1xb(%e'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -116,6 +116,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
 
 try:
     from WhaleCrew.local_settings import DATABASES

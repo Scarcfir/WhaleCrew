@@ -1,4 +1,35 @@
 {% extends 'base.html' %}
 {% block content %}
-HELLO NEW PAGE
+
+<style>
+.table {
+   margin: auto;
+   width: 70% !important;
+}
+</style>
+<div class="text-center"> HELLO NEW PAGE </dir>
+    <br>
+    <br>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Coin</th>
+            <th scope="col">Ticker symbol</th>
+            <th scope="col">Price</th>
+            <th scope="col">Market Cap</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row">1</th>
+            <td>Bitcoin</td>
+            <td>BTC</td>
+            <td>150000$</td>
+            <td> 1 mld</td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <br>
 {% endblock %}
