@@ -5,35 +5,49 @@
             <img src="https://image.ibb.co/kUagtU/rocket_contact.png" alt="rocket_contact"/>
         </div>
 
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
 
             {% csrf_token %}
-            <center><h3>Create Article</h3></center>
+            <center><h3>Create News</h3></center>
             <div class="row text-center">
                 <div class="col-md-12">
                     <div class="form-group">
                         <input type="text" name="Title" class="form-control" placeholder="Title" value=""/>
                     </div>
                     <div class="form-group">
-                        <input type="text" name="txtEmail" class="form-control" placeholder="Short Description" value=""/>
+                        <input type="text" name="ShortDesc" class="form-control" placeholder="Short Description"
+                               value=""/>
                     </div>
-                    
+                </div>
+
+
+                <div class="form-group">
                     <br>
-                    <div class="form-group">
-                        <textarea name="txtMsg" class="form-control" placeholder="Article Text :"
-                                  style="width: 100%; height: 250px;"></textarea>
-                    </div>
-                    <br><br>
-                    <div class="form-group">
-                        <input type="submit" name="btnSubmit" class="btnContact" value="Add Article"/>
-                    </div>
+                    Wybierz zdjęcie:
                     <br>
+                    <center><input type="file" name="photo" class="form-control" id="customFile" style="width: 500px; "
+                                   accept="image/png, image/jpeg, image/jpg"></center>
 
                 </div>
+
+
+                <div class="form-group">
+                    <br>
+                    <textarea name="Text" class="form-control" placeholder="Article Text :"
+                              style="width: 100%; height: 250px;"></textarea>
+                </div>
+                <br><br>
+                <div class="form-group">
+                    <input type="submit" name="btnSubmit" class="btnContact" value="Add Article"/>
+                </div>
+                <br>
+
             </div>
 
 
         </form>
+
     </div>
+
 
 {% endblock %}

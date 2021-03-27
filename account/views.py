@@ -86,11 +86,6 @@ class Contact(View):
         email = request.POST['txtEmail']
         phonenumber = request.POST['txtPhone']
         msg = request.POST['txtMsg']
-
-        print(name)
-        print(email)
-        print(phonenumber)
-        print(msg)
         return render(request, "contact.html")
 
 def validateEmail(email):
