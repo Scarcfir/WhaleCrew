@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.views import View
 from django.core.paginator import Paginator
+from home.models import News
 
 
 class IndexView(View):
@@ -13,20 +14,17 @@ class IndexView(View):
 
 class NewsList(View):
     def get(self, request):
-        return render(request, "News_List.html")
+        object = News.objects.all()
+        objects = object.order_by("created").reverse()
+        return render(request, "News_List.html", {'object_list': objects})
 
 
-class News(View):
+class News_Page(View):
+    def get(self, request, id):
+        objects = News.objects.get(id=id)
+        return render(request, "news_page.html", {'obj': objects})
+
+
+class AddArticle(View):
     def get(self, request):
-        return render(request, "news_page.html")
-
-##### PAGINATOR
-#      class Recipes(View):
-#       def get(self, request):
-#           plan_count = Plan.objects.count()
-#           racipe_list = Recipe.objects.all().order_by('-votes', 'created')
-#           paginator = Paginator(racipe_list, 9)
-#           page = request.GET.get('page')
-#           news = paginator.get_page(page)
-#           context = {'plan_count': plan_count, 'recipes': recipes}
-#       return render(request, "app-recipes.html", context)
+        return render(request, "add_news.html")

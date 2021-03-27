@@ -1,3 +1,13 @@
 from django.db import models
 
-# Create your models here.
+
+class News(models.Model):
+    title = models.CharField(max_length=255)
+    short_desc = models.CharField(max_length=255)
+    description = models.TextField(null=True)
+    picture_file = models.CharField(max_length=255)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now_add=True)
+
+    def get_detail_url(self):
+        return f"/News/{self.id}"

@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from account.views import LoginView, ForgotPass, SingUp, Contact, LogoutView
-from home.views import IndexView, NewsList, News
+from home.views import IndexView, NewsList, News_Page, AddArticle
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +27,7 @@ urlpatterns = [
     path('Sing_up/', SingUp.as_view(), name='Sing_up'),
     path('Contact/', Contact.as_view(), name='Contact'),
     path('NewsList/', NewsList.as_view(), name='NewsList'),
-    path('News/', News.as_view(), name='News'),
+    path('News/<int:id>/', News_Page.as_view(), name='News_page'),
+    path('AddArticle', AddArticle.as_view(), name='AddArticle'),
 
 ]

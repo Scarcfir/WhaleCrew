@@ -101,7 +101,6 @@ def validateEmail(email):
 
 
 class LogoutView(View):
-
     def get(self, request):
         logout(request)
         return redirect('IndexPage')
