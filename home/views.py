@@ -5,13 +5,25 @@ from django.views import View
 from django.core.paginator import Paginator
 
 from home.forms import ImageForm
-from home.models import News
+from home.models import News, Newsletter
+import re
 
 
 class IndexView(View):
 
     def get(self, request):
         return render(request, "index.html")
+
+    def post(self, request):
+        create = False
+        email = request.POST['EMAIL']
+        email_exist = list(Newsletter.objects.filter(email=email))
+        print(email_exist)
+        print(email)
+        if validateEmail(email) and email_exist == []:
+            Newsletter.objects.create(email=email)
+            create = True
+        return render(request, "index.html", {'object_list': create})
 
 
 class NewsList(View):
@@ -45,3 +57,10 @@ class AddArticle(View):
         object = News.objects.all()
         objects = object.order_by("created").reverse()
         return render(request, "News_List.html", {'object_list': objects})
+
+
+def validateEmail(email):
+    if len(email) > 6:
+        if re.match(r'\b[\w.-]+@[\w.-]+.\w{2,4}\b', email) != None:
+            return 1
+    return 0

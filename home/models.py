@@ -11,3 +11,7 @@ class News(models.Model):
 
     def get_detail_url(self):
         return f"/News/{self.id}"
+
+
+class Newsletter(models.Model):
+    email = models.CharField(max_length=40)

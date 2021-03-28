@@ -26,7 +26,7 @@
 
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <!-- Brand/logo -->
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="{% url 'IndexPage' %}">
         <img src="/static/logo.jpeg" alt="logo" width="80" height="50" class="d-inline-block">
     </a>
 
@@ -39,7 +39,7 @@
         <li class="nav-item">
             <a class="nav-link" href="{% url 'NewsList' %}">News</a>
         </li>
-         <li class="nav-item">
+        <li class="nav-item">
             <a class="nav-link" href="{% url 'AddArticle' %}">Add News</a>
         </li>
         <li class="nav-item">
@@ -128,12 +128,19 @@
                 Subscribe to our free newsletter to receive the latest news, updates and reports from the cryptocurrency
                 market.
             </p>
+            {% if object_list == True %}
+                <h1>Successful subscribe</h1>
+            {% elif object_list == False %}
+                <h1>Unsuccessful subscribe</h1>
+            {% endif %}
         </section>
         <!-- Section: Text -->
 
         <!-- Section: Form -->
         <section class="">
-            <form action="">
+            <form method="post">
+
+                {% csrf_token %}
                 <!--Grid row-->
                 <div class="row d-flex justify-content-center">
                     <!--Grid column-->
@@ -148,7 +155,7 @@
                     <div class="col-md-5 col-12">
                         <!-- Email input -->
                         <div class="form-outline form-white mb-4">
-                            <input type="email" id="form5Example2" class="form-control"/>
+                            <input type="email" name="EMAIL" id="EMAIL" class="form-control"/>
                             <label class="form-label" for="form5Example2">Email address</label>
                         </div>
                     </div>
@@ -165,30 +172,28 @@
                 </div>
                 <!--Grid row-->
             </form>
+
+
         </section>
         <!-- Section: Form -->
 
-
+        <br>
         <!-- Section: Links -->
         <section class="">
             <!--Grid row-->
-            <div class="row">
-                <!--Grid column-->
-                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-                    <h5 class="text-uppercase">Links</h5>
+            <div class="row justify-content-center">
 
+                <!--Grid column-->
+
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-uppercase">WhaleCrew</h5>
+                    <br>
                     <ul class="list-unstyled mb-0">
                         <li>
-                            <a href="#!" class="text-white">Link 1</a>
+                            <p><a href="#!" class="text-white">O nas</a></p>
                         </li>
                         <li>
-                            <a href="#!" class="text-white">Link 2</a>
-                        </li>
-                        <li>
-                            <a href="#!" class="text-white">Link 3</a>
-                        </li>
-                        <li>
-                            <a href="#!" class="text-white">Link 4</a>
+                            <p><a href="#!" class="text-white">Współpraca</a></p>
                         </li>
                     </ul>
                 </div>
@@ -196,65 +201,44 @@
 
                 <!--Grid column-->
                 <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-                    <h5 class="text-uppercase">Links</h5>
-
+                    <h5 class="text-uppercase">Regulamin</h5>
+                    <br>
                     <ul class="list-unstyled mb-0">
                         <li>
-                            <a href="#!" class="text-white">Link 1</a>
+                            <p><a href="#!" class="text-white">Regulamin serwisu</a></p>
                         </li>
                         <li>
-                            <a href="#!" class="text-white">Link 2</a>
+                            <p><a href="#!" class="text-white">Program GetCandy</a></p>
                         </li>
-                        <li>
-                            <a href="#!" class="text-white">Link 3</a>
-                        </li>
-                        <li>
-                            <a href="#!" class="text-white">Link 4</a>
-                        </li>
+
                     </ul>
                 </div>
                 <!--Grid column-->
 
                 <!--Grid column-->
                 <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-                    <h5 class="text-uppercase">Links</h5>
-
+                    <h5 class="text-uppercase">Kontakt</h5>
+                    <br>
                     <ul class="list-unstyled mb-0">
                         <li>
-                            <a href="#!" class="text-white">Link 1</a>
+                            <p> Kontakt telefoniczny</p>
                         </li>
                         <li>
-                            <a href="#!" class="text-white">Link 2</a>
+                            <p>pon. - pt.</p>
                         </li>
                         <li>
-                            <a href="#!" class="text-white">Link 3</a>
+                            <p> od 8:00 do 16:00 </p>
                         </li>
                         <li>
-                            <a href="#!" class="text-white">Link 4</a>
+                            <p> +48 884 302 451</p>
+                        </li>
+                        <li>
+                            <p> mail: k.odrobinski@gmail.com </p>
                         </li>
                     </ul>
                 </div>
-                <!--Grid column-->
 
-                <!--Grid column-->
-                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-                    <h5 class="text-uppercase">Links</h5>
 
-                    <ul class="list-unstyled mb-0">
-                        <li>
-                            <a href="#!" class="text-white">Link 1</a>
-                        </li>
-                        <li>
-                            <a href="#!" class="text-white">Link 2</a>
-                        </li>
-                        <li>
-                            <a href="#!" class="text-white">Link 3</a>
-                        </li>
-                        <li>
-                            <a href="#!" class="text-white">Link 4</a>
-                        </li>
-                    </ul>
-                </div>
                 <!--Grid column-->
             </div>
             <!--Grid row-->
