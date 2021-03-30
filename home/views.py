@@ -5,25 +5,42 @@ from django.views import View
 from django.core.paginator import Paginator
 
 from home.forms import ImageForm
-from home.models import News, Newsletter
+from home.models import News, Newsletter, CryptoCoins2
 import re
+import crypto_coin.functions.get_binance_data as get_crypto_data
 
 
 class IndexView(View):
 
     def get(self, request):
-        return render(request, "index.html")
+        # get_crypto_info = get_crypto_data.update_db_crypto_coin()
+        # for coin in get_crypto_info:
+        #     name = coin['name']
+        #     symbol = coin['symbol']
+        #     price = coin['price']
+        #     usd_market_cap = coin['usd_market_cap']
+        #     usd_24h_vol = coin['usd_24h_vol']
+        # CryptoCoins2.objects.update_or_create(name=name, symbol=symbol, price=price,
+        #                                        usd_market_cap=usd_market_cap, usd_24h_vol=usd_24h_vol)
+        objects = CryptoCoins2.objects.all()
+        crypto_coin = objects.order_by("usd_market_cap").reverse()
+        print(CryptoCoins2.objects.count())
 
-    def post(self, request):
-        create = False
-        email = request.POST['EMAIL']
-        email_exist = list(Newsletter.objects.filter(email=email))
-        print(email_exist)
-        print(email)
-        if validateEmail(email) and email_exist == []:
-            Newsletter.objects.create(email=email)
-            create = True
-        return render(request, "index.html", {'object_list': create})
+        paginator = Paginator(crypto_coin, 30)
+        page = request.GET.get('page')
+        obj = paginator.get_page(page)
+        context = {'object_list': crypto_coin, 'paginator': obj}
+        return render(request, "index.html", context)
+
+
+def post(self, request):
+    create = False
+    email = request.POST['EMAIL']
+    email_exist = list(Newsletter.objects.filter(email=email))
+    if validateEmail(email) and email_exist == []:
+        Newsletter.objects.create(email=email)
+        create = True
+    return render(request, "index.html", {'object_list': create})
 
 
 class NewsList(View):
