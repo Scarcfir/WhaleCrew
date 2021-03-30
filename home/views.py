@@ -19,17 +19,23 @@ class IndexView(View):
             name = coin['name']
             symbol = coin['symbol']
             price = coin['price']
-            usd_market_cap = format(float(coin['usd_24h_vol']), '.2f')
-            usd_24h_vol = format(float(coin['usd_24h_vol']), '.2f')
+            usd_market_cap = format((int(coin['usd_market_cap']) / 1000000000), '.2f') if format(
+                float(coin['usd_market_cap']),
+                '.2f') != 0 else format(
+                float(coin['usd_market_cap']), '.2f')
+            usd_24h_vol = format((int(coin['usd_24h_vol']) / 1000000000), '.2f') if format(
+                float(coin['usd_24h_vol']),
+                '.2f') != 0 else format(
+                float(coin['usd_24h_vol']), '.2f')
             coin_name = CryptoCoins3.objects.values_list('name', flat=True)
             if not name in coin_name:
                 CryptoCoins3.objects.create(name=name, symbol=symbol, price=price,
                                             usd_market_cap=usd_market_cap, usd_24h_vol=usd_24h_vol)
             else:
                 crypto_to_update = CryptoCoins3.objects.get(name=name)
-                crypto_to_update.price = coin['price']
-                crypto_to_update.usd_market_cap = format(float(coin['usd_24h_vol']), '.2f')
-                crypto_to_update.usd_24h_vol = format(float(coin['usd_24h_vol']), '.2f')
+                crypto_to_update.price = price
+                crypto_to_update.usd_market_cap = usd_market_cap
+                crypto_to_update.usd_24h_vol = usd_24h_vol
                 coins_to_update.append(crypto_to_update)
 
         CryptoCoins3.objects.bulk_update(coins_to_update, ['price', 'usd_market_cap', 'usd_24h_vol'])
