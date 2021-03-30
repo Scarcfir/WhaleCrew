@@ -14,23 +14,25 @@ class IndexView(View):
 
     def get(self, request):
         get_crypto_info = get_crypto_data.update_db_crypto_coin()
+        coins_to_update = []
         for coin in get_crypto_info:
             name = coin['name']
             symbol = coin['symbol']
             price = coin['price']
-            usd_market_cap = format(float(coin['usd_market_cap']), '.2f')
+            usd_market_cap = format(float(coin['usd_24h_vol']), '.2f')
             usd_24h_vol = format(float(coin['usd_24h_vol']), '.2f')
-            crypto_exist = list(CryptoCoins3.objects.filter(name=name))
-            if not crypto_exist:
-                CryptoCoins3.objects.update_or_create(name=name, symbol=symbol, price=price,
-                                                      usd_market_cap=usd_market_cap, usd_24h_vol=usd_24h_vol)
+            coin_name = CryptoCoins3.objects.values_list('name', flat=True)
+            if not name in coin_name:
+                CryptoCoins3.objects.create(name=name, symbol=symbol, price=price,
+                                            usd_market_cap=usd_market_cap, usd_24h_vol=usd_24h_vol)
             else:
                 crypto_to_update = CryptoCoins3.objects.get(name=name)
                 crypto_to_update.price = coin['price']
-                crypto_to_update.usd_market_cap = coin['usd_24h_vol']
-                crypto_to_update.usd_24h_vold = coin['usd_24h_vol']
-                crypto_to_update.save()
+                crypto_to_update.usd_market_cap = format(float(coin['usd_24h_vol']), '.2f')
+                crypto_to_update.usd_24h_vol = format(float(coin['usd_24h_vol']), '.2f')
+                coins_to_update.append(crypto_to_update)
 
+        CryptoCoins3.objects.bulk_update(coins_to_update, ['price', 'usd_market_cap', 'usd_24h_vol'])
         objects = CryptoCoins3.objects.all()
         crypto_coin = objects.order_by("usd_market_cap").reverse()
         paginator = Paginator(crypto_coin, 30)

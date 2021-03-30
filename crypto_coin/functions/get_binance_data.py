@@ -48,9 +48,6 @@ def get_all_cryptodata():
              '11': 'Nov',
              '12': 'Dec'}
 
-    data = f"{day} {month[f'{m}']}, {year}"
-    start_ts = date_to_milliseconds(data)
-    ETH = client.get_klines(symbol=symbol, interval=interval, startTime=start_ts)
     prices = client.get_all_tickers()
 
     for price in prices:
@@ -125,3 +122,4 @@ def get_all_crypto_info():
 def update_db_crypto_coin():
     get_crypto_info = get_all_crypto_info()
     return get_crypto_info
+
