@@ -18,9 +18,9 @@ class Newsletter(models.Model):
     email = models.CharField(max_length=40)
 
 
-class CryptoCoins2(models.Model):
-    name = models.CharField(max_length=50)
-    symbol = models.CharField(max_length=20)
+class CryptoCoins3(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    symbol = models.CharField(max_length=20, unique=True)
     price = models.FloatField()
     usd_market_cap = models.FloatField()
     usd_24h_vol = models.FloatField()

@@ -5,7 +5,7 @@ from django.views import View
 from django.core.paginator import Paginator
 
 from home.forms import ImageForm
-from home.models import News, Newsletter, CryptoCoins2
+from home.models import News, Newsletter, CryptoCoins3
 import re
 import crypto_coin.functions.get_binance_data as get_crypto_data
 
@@ -13,19 +13,26 @@ import crypto_coin.functions.get_binance_data as get_crypto_data
 class IndexView(View):
 
     def get(self, request):
-        # get_crypto_info = get_crypto_data.update_db_crypto_coin()
-        # for coin in get_crypto_info:
-        #     name = coin['name']
-        #     symbol = coin['symbol']
-        #     price = coin['price']
-        #     usd_market_cap = coin['usd_market_cap']
-        #     usd_24h_vol = coin['usd_24h_vol']
-        # CryptoCoins2.objects.update_or_create(name=name, symbol=symbol, price=price,
-        #                                        usd_market_cap=usd_market_cap, usd_24h_vol=usd_24h_vol)
-        objects = CryptoCoins2.objects.all()
-        crypto_coin = objects.order_by("usd_market_cap").reverse()
-        print(CryptoCoins2.objects.count())
+        get_crypto_info = get_crypto_data.update_db_crypto_coin()
+        for coin in get_crypto_info:
+            name = coin['name']
+            symbol = coin['symbol']
+            price = coin['price']
+            usd_market_cap = format(float(coin['usd_market_cap']), '.2f')
+            usd_24h_vol = format(float(coin['usd_24h_vol']), '.2f')
+            crypto_exist = list(CryptoCoins3.objects.filter(name=name))
+            if not crypto_exist:
+                CryptoCoins3.objects.update_or_create(name=name, symbol=symbol, price=price,
+                                                      usd_market_cap=usd_market_cap, usd_24h_vol=usd_24h_vol)
+            else:
+                crypto_to_update = CryptoCoins3.objects.get(name=name)
+                crypto_to_update.price = coin['price']
+                crypto_to_update.usd_market_cap = coin['usd_24h_vol']
+                crypto_to_update.usd_24h_vold = coin['usd_24h_vol']
+                crypto_to_update.save()
 
+        objects = CryptoCoins3.objects.all()
+        crypto_coin = objects.order_by("usd_market_cap").reverse()
         paginator = Paginator(crypto_coin, 30)
         page = request.GET.get('page')
         obj = paginator.get_page(page)
