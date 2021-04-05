@@ -1,9 +1,11 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.views import View
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from account.forms import LoginForm, ForgotPassword, RegisterForm
+from home.models import CryptoCoins3
 import re
 
 
@@ -68,8 +70,6 @@ class SingUp(View):
                     else:
                         error_username = 0
 
-                    print(error_mail)
-                    print(error_username)
                     return render(request, 'Sing_Up.html',
                                   {'form': form, 'error_mail': error_mail, 'error_user': error_username})
         else:
@@ -88,6 +88,7 @@ class Contact(View):
         msg = request.POST['txtMsg']
         return render(request, "contact.html")
 
+
 def validateEmail(email):
     if len(email) > 6:
         if re.match(r'\b[\w.-]+@[\w.-]+.\w{2,4}\b', email) != None:
@@ -96,6 +97,37 @@ def validateEmail(email):
 
 
 class LogoutView(View):
+
     def get(self, request):
         logout(request)
         return redirect('IndexPage')
+
+
+class Portfolio(View):
+
+    def get(self, request):
+
+        if not request.user.is_authenticated:
+            return redirect('Login')
+
+        objects = CryptoCoins3.objects.all()
+        crypto_coin = objects.order_by("usd_market_cap").reverse()
+        paginator = Paginator(crypto_coin, 30)
+        page = request.GET.get('page')
+        obj = paginator.get_page(page)
+
+        list = []
+        if request.user.is_authenticated:
+            user_fav = request.user
+            favourite_coins = user_fav.favourite.all()
+            for i in favourite_coins:
+                list.append(i.id)
+
+        objects = CryptoCoins3.objects.filter(id__in=list)
+        crypto_coin = objects.order_by("usd_market_cap").reverse()
+        paginator = Paginator(crypto_coin, 30)
+        page = request.GET.get('page')
+        obj = paginator.get_page(page)
+
+        context = {'paginator': obj}
+        return render(request, 'portfolio.html', context)

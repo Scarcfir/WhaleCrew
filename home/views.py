@@ -39,23 +39,31 @@ class IndexView(View):
                 coins_to_update.append(crypto_to_update)
 
         CryptoCoins3.objects.bulk_update(coins_to_update, ['price', 'usd_market_cap', 'usd_24h_vol'])
+
         objects = CryptoCoins3.objects.all()
         crypto_coin = objects.order_by("usd_market_cap").reverse()
         paginator = Paginator(crypto_coin, 30)
         page = request.GET.get('page')
         obj = paginator.get_page(page)
-        context = {'object_list': crypto_coin, 'paginator': obj}
+
+        list = []
+        if request.user.is_authenticated:
+            user_fav = request.user
+            favourite_coins = user_fav.favourite.all()
+            for i in favourite_coins:
+                list.append(i.id)
+
+        context = {'object_list': crypto_coin, 'paginator': obj, 'favourite_coins': list}
         return render(request, "index.html", context)
 
-
-def post(self, request):
-    create = False
-    email = request.POST['EMAIL']
-    email_exist = list(Newsletter.objects.filter(email=email))
-    if validateEmail(email) and email_exist == []:
-        Newsletter.objects.create(email=email)
-        create = True
-    return render(request, "index.html", {'object_list': create})
+    def post(self, request):
+        create = False
+        email = request.POST['EMAIL']
+        email_exist = list(Newsletter.objects.filter(email=email))
+        if validateEmail(email) and email_exist == []:
+            Newsletter.objects.create(email=email)
+            create = True
+        return render(request, "index.html", {'object_list': create})
 
 
 class NewsList(View):
@@ -76,6 +84,7 @@ class News_Page(View):
 
 
 class AddArticle(View):
+
     def get(self, request):
         return render(request, "add_news.html")
 
@@ -89,6 +98,20 @@ class AddArticle(View):
         object = News.objects.all()
         objects = object.order_by("created").reverse()
         return render(request, "News_List.html", {'object_list': objects})
+
+
+class AddTOFavorite(View):
+
+    def get(self, request, id):
+        data = CryptoCoins3.objects.get(id=id)
+        if data.favourite.filter(id=request.user.id).exists():
+            data.favourite.remove(request.user)
+            print("true")
+        else:
+            data.favourite.add(request.user)
+            print("false")
+        print(id)
+        return redirect('IndexPage')
 
 
 def validateEmail(email):

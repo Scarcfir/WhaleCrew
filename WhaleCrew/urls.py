@@ -18,8 +18,8 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
-from account.views import LoginView, ForgotPass, SingUp, Contact, LogoutView
-from home.views import IndexView, NewsList, News_Page, AddArticle
+from account.views import LoginView, ForgotPass, SingUp, Contact, LogoutView, Portfolio
+from home.views import IndexView, NewsList, News_Page, AddArticle, AddTOFavorite
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,6 +32,8 @@ urlpatterns = [
     path('NewsList/', NewsList.as_view(), name='NewsList'),
     path('News/<int:id>/', News_Page.as_view(), name='News_page'),
     path('AddArticle', AddArticle.as_view(), name='AddArticle'),
+    path('portfolio', Portfolio.as_view(), name='Portfolio'),
+    path('<int:id>/', AddTOFavorite.as_view(), name='AddTOFavorite'),
 
 ]
 

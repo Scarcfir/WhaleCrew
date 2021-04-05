@@ -8,23 +8,21 @@
         }
     </style>
     <br><br>
-    <div class="text-center"><h1> List of the 10 most popular currencies </h1></div>
+    <div class="text-center"><h1> Your Portfolio </h1></div>
+
+
 
     <br>
     <table class="table table-bordered text-center">
         <thead>
         <tr>
             <th scope="col">#</th>
-
-            {% if user.is_authenticated %}
-                <th scope="col">Favourite</th>
-            {% endif %}
-
             <th scope="col">Coin</th>
             <th scope="col">Ticker</th>
-            <th scope="col">Price</th>
+            <th scope="col">Actual Price</th>
             <th scope="col">Market Cap</th>
-            <th scope="col">24h Volumen</th>
+            <th scope="col">Quantity of Coin</th>
+            <th scope="col">Balance</th>
         </tr>
         </thead>
         <tbody>
@@ -32,26 +30,13 @@
         {% for obj in paginator %}
             <tr>
                 <th scope="row">{{ forloop.counter }}</th>
-
-                {% if user.is_authenticated %}
-
-                    <td>
-                        <a href="{{ obj.id }}" style="color: #f5c842; text-decoration: none;">
-                            {% if not obj.id in favourite_coins %}
-                                <i class="far fa-heart"></i>
-                            {% else %}
-                               <i class="fas fa-heart"></i>
-                            {% endif %}
-                        </a>
-                    </td>
-
-                {% endif %}
-
                 <td>{{ obj.name }}</td>
                 <td>{{ obj.symbol }}</td>
                 <td>{{ obj.price }} $</td>
                 <td>{{ obj.usd_market_cap }} mld $</td>
-                <td>{{ obj.usd_24h_vol }} mld $</td>
+
+                <td>{{ obj.usd_market_cap }} </td>
+                <td>{{ obj.usd_market_cap }}  $</td>
             </tr>
         {% endfor %}
 
