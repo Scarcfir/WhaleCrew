@@ -119,3 +119,26 @@ def validateEmail(email):
         if re.match(r'\b[\w.-]+@[\w.-]+.\w{2,4}\b', email) != None:
             return 1
     return 0
+
+
+class About_Us(View):
+
+    def get(self, request):
+        return render(request, 'about_us.html')
+
+
+class Branding_Guide(View):
+
+    def get(self, request):
+        return render(request, 'Branding_Guide.html')
+
+class Regulations(View):
+
+    def get(self, request):
+        return render(request, 'Regulations.html')
+
+
+class GetCandy(View):
+
+    def get(self, request):
+        return render(request, 'GetCandy.html')
