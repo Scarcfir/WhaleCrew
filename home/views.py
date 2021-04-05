@@ -132,6 +132,7 @@ class Branding_Guide(View):
     def get(self, request):
         return render(request, 'Branding_Guide.html')
 
+
 class Regulations(View):
 
     def get(self, request):

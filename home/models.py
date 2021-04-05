@@ -1,5 +1,4 @@
 from django.db import models
-from django.conf import settings
 from django.contrib.auth.models import User
 
 
@@ -14,6 +13,8 @@ class News(models.Model):
     def get_detail_url(self):
         return f"/News/{self.id}"
 
+
+##############NEWSLETTER######################
 
 class Newsletter(models.Model):
     email = models.CharField(max_length=40)
@@ -34,10 +35,12 @@ class CryptoCoins3(models.Model):
         return f"{self.id}"
 
 
-# class Portfolio(models.Model):
-#     owner = models.ForeignKey(User, related_name='owner', on_delete=models.CASCADE)
-#
-# class Transaction(models.Model):
-#     account = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
-#     currency = models.ForeignKey(CryptoCoins3, on_delete=models.CASCADE)
-#     quantity = models.FloatField()
+class Portfolio(models.Model):
+    owner = models.ForeignKey(User, related_name='owner', on_delete=models.CASCADE)
+    coins = models.ManyToManyField(CryptoCoins3, through='Wallet')
+
+
+class Wallet(models.Model):
+    account = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
+    currency = models.ForeignKey(CryptoCoins3, on_delete=models.CASCADE)
+    quantity = models.FloatField()

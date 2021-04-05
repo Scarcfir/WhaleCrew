@@ -1,12 +1,13 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.views import View
-from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from account.forms import LoginForm, ForgotPassword, RegisterForm
 from home.models import CryptoCoins3
 import re
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 class LoginView(View):
@@ -86,6 +87,12 @@ class Contact(View):
         email = request.POST['txtEmail']
         phonenumber = request.POST['txtPhone']
         msg = request.POST['txtMsg']
+        subject = name
+        message = f"{msg} + {email} + {phonenumber}"
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = ['whale.crew.help@gmail.com', ]
+        send_mail(subject, message, email_from, recipient_list)
+
         return render(request, "contact.html")
 
 

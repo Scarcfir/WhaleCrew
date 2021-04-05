@@ -1,8 +1,89 @@
 {% extends 'base.html' %}
 {% block content %}
+    <style>
+
+        .social-link {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            border-radius: 50%;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .social-link:hover,
+        .social-link:focus {
+            background: #ddd;
+            text-decoration: none;
+            color: #555;
+        }
+
+    </style>
 
     <br><br>
     <div class="text-center"><h1> About Us </h1></div>
+
+    <div class="row text-center">
+        <!-- Team item-->
+        <div class="col-xl-12 col-sm-6 mb-5">
+            <div class="bg-white rounded shadow-sm py-5 px-4"><img
+                    src="https://avatars.githubusercontent.com/u/60196443?v=4" alt="" width="100"
+                    class="img-fluid rounded-circle mb-3 img-thumbnail shadow-sm">
+                <h5 class="mb-0">Karol Odrobiński</h5><span class="small text-uppercase text-muted">CEO - Founder</span>
+                <ul class="social mb-0 list-inline mt-3">
+                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-facebook-f"></i></a>
+                    </li>
+                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-github"></i></a></li>
+                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-instagram"></i></a>
+                    </li>
+                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-linkedin"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- End-->
+
+        <!-- Team item-->
+        <div class="col-xl-6 col-sm-6 mb-5">
+            <div class="bg-white rounded shadow-sm py-5 px-4"><img
+                    src="https://media-exp1.licdn.com/dms/image/C4D03AQGCKNq8StjlRw/profile-displayphoto-shrink_200_200/0/1606658887020?e=1623283200&v=beta&t=_6RNajMJAoMCo3mVe-EMAgA_S5SC9tc-k6-TqwV1Lnk" alt=""
+                    width="100" class="img-fluid rounded-circle mb-3 img-thumbnail shadow-sm">
+                <h5 class="mb-0">Krzysztof Sitko</h5><span class="small text-uppercase text-muted">expert</span>
+                <ul class="social mb-0 list-inline mt-3">
+                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-facebook-f"></i></a>
+                    </li>
+                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-instagram"></i></a>
+                    </li>
+                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-linkedin"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- End-->
+
+        <!-- Team item-->
+        <div class="col-xl-6 col-sm-6 mb-5">
+            <div class="bg-white rounded shadow-sm py-5 px-4"><img
+                    src="/static/images/jk.jpg" alt=""
+                    width="100" class="img-fluid rounded-circle mb-3 img-thumbnail shadow-sm">
+                <h5 class="mb-0">Jakub COTIE Kapral</h5><span
+                        class="small text-uppercase text-muted">expert / HYPE MENAGER</span>
+                <ul class="social mb-0 list-inline mt-3">
+                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-facebook-f"></i></a>
+                    </li>
+                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-instagram"></i></a>
+                    </li>
+                    <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-linkedin"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- End-->
+
+    </div>
+    </div>
+    </div>
 
 
 {% endblock %}

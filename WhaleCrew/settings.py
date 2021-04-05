@@ -15,18 +15,16 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'o%&*5o$*)6pkwx^w(6vy76&b!n@_+7ww_^u6$pn83f5c1xb(%e'
+from WhaleCrew.local_settings import SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -74,8 +72,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'WhaleCrew.wsgi.application'
 
-
-
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -94,7 +90,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -108,7 +103,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
@@ -118,9 +112,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static/"),
 ]
 
-
 try:
-    from WhaleCrew.local_settings import DATABASES
+    from WhaleCrew.local_settings import DATABASES, EMAIL_HOST_PASSWORD, EMAIL_HOST_USER, EMAIL_HOST, EMAIL_BACKEND, \
+        EMAIL_PORT, EMAIL_USE_TLS
 except ModuleNotFoundError:
     print("Brak konfiguracji bazy danych w pliku local_settings.py!")
     print("Uzupełnij dane i spróbuj ponownie!")
