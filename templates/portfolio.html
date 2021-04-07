@@ -23,6 +23,7 @@
             <th scope="col">Market Cap</th>
             <th scope="col">Quantity of Coin</th>
             <th scope="col">Balance</th>
+            <th scope="col">Transaction</th>
         </tr>
         </thead>
         <tbody>
@@ -30,13 +31,14 @@
         {% for obj in paginator %}
             <tr>
                 <th scope="row">{{ forloop.counter }}</th>
-                <td>{{ obj.name }}</td>
-                <td>{{ obj.symbol }}</td>
-                <td>{{ obj.price }} $</td>
-                <td>{{ obj.usd_market_cap }} mld $</td>
+                <td>{{ obj.coin.name }}</td>
+                <td>{{ obj.coin.symbol }}</td>
+                <td>{{ obj.coin.price }} $</td>
+                <td>{{ obj.coin.usd_market_cap }} mld $</td>
 
-                <td>{{ obj.usd_market_cap }} </td>
+                <td>{{ obj.quantity }} </td>
                 <td>{{ obj.usd_market_cap }}  $</td>
+                <td><a href="{{ obj.get_buy_url }}">LINK</a></td>
             </tr>
         {% endfor %}
 

@@ -5,7 +5,7 @@ from django.views import View
 from django.core.paginator import Paginator
 
 from home.forms import ImageForm
-from home.models import News, Newsletter, CryptoCoins3
+from home.models import News, Newsletter, CryptoCoins3, Portfolio
 import re
 import crypto_coin.functions.get_binance_data as get_crypto_data
 
@@ -24,11 +24,11 @@ class IndexView(View):
                 '.2f') != 0 else format(
                 float(coin['usd_market_cap']), '.2f')
             usd_24h_vol = format((int(coin['usd_24h_vol']) / 1000000000), '.2f') if format(
-                float(coin['usd_24h_vol']),
-                '.2f') != 0 else format(
-                float(coin['usd_24h_vol']), '.2f')
+                float(coin['usd_24h_vol']), '.2f'
+            ) != 0 else format(float(coin['usd_24h_vol']), '.2f')
             coin_name = CryptoCoins3.objects.values_list('name', flat=True)
             if not name in coin_name:
+
                 CryptoCoins3.objects.create(name=name, symbol=symbol, price=price,
                                             usd_market_cap=usd_market_cap, usd_24h_vol=usd_24h_vol)
             else:
@@ -103,14 +103,14 @@ class AddArticle(View):
 class AddTOFavorite(View):
 
     def get(self, request, id):
-        data = CryptoCoins3.objects.get(id=id)
-        if data.favourite.filter(id=request.user.id).exists():
-            data.favourite.remove(request.user)
-            print("true")
+        user = request.user
+        coin = CryptoCoins3.objects.get(id=id)
+        if not user.portfolio_set.filter(coin=coin).exists():
+            Portfolio.objects.create(owner=user, coin=coin)
+        if coin.favourite.filter(id=user.id).exists():
+            coin.favourite.remove(user)
         else:
-            data.favourite.add(request.user)
-            print("false")
-        print(id)
+            coin.favourite.add(user)
         return redirect('IndexPage')
 
 

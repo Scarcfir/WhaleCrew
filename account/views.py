@@ -4,7 +4,8 @@ from django.views import View
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from account.forms import LoginForm, ForgotPassword, RegisterForm
-from home.models import CryptoCoins3
+from account.models import Profile
+from home.models import CryptoCoins3, Portfolio, Transaction
 import re
 from django.core.mail import send_mail
 from django.conf import settings
@@ -60,6 +61,8 @@ class SingUp(View):
                     u = User.objects.create(username=username, email=email)
                     u.set_password(password)
                     u.save()
+                    p = Profile.objects.create(user=u)
+                    p.save()
                     return render(request, 'welcome.html', {'user': username})
                 else:
                     if mail == []:
@@ -110,31 +113,33 @@ class LogoutView(View):
         return redirect('IndexPage')
 
 
-class Portfolio(View):
+class PortfolioView(View):
 
     def get(self, request):
-
         if not request.user.is_authenticated:
             return redirect('Login')
 
-        objects = CryptoCoins3.objects.all()
-        crypto_coin = objects.order_by("usd_market_cap").reverse()
-        paginator = Paginator(crypto_coin, 30)
+        portfolios = Portfolio.objects.filter(owner=request.user)
+
+
+        paginator = Paginator(portfolios, 30)
         page = request.GET.get('page')
         obj = paginator.get_page(page)
-
-        list = []
-        if request.user.is_authenticated:
-            user_fav = request.user
-            favourite_coins = user_fav.favourite.all()
-            for i in favourite_coins:
-                list.append(i.id)
-
-        objects = CryptoCoins3.objects.filter(id__in=list)
-        crypto_coin = objects.order_by("usd_market_cap").reverse()
-        paginator = Paginator(crypto_coin, 30)
-        page = request.GET.get('page')
-        obj = paginator.get_page(page)
-
         context = {'paginator': obj}
         return render(request, 'portfolio.html', context)
+
+
+class BuyCoin(View):
+
+    def get(self, request,id):
+        user = request.user
+        coin = CryptoCoins3.objects.get(id=id)
+        print(id)
+        t = Transaction.objects.create(profile=user.profile, coin=coin, quantity=1.0, price=10.0)
+        t.save()
+
+        if coin.favourite.filter(id=user.id).exists():
+            coin.favourite.remove(user)
+        else:
+            coin.favourite.add(user)
+        return redirect('PortfolioView')

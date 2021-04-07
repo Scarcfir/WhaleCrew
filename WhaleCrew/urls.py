@@ -18,9 +18,9 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
-from account.views import LoginView, ForgotPass, SingUp, Contact, LogoutView, Portfolio
-from home.views import IndexView, NewsList, News_Page, AddArticle, AddTOFavorite, About_Us, Branding_Guide, Regulations, GetCandy
-
+from account.views import LoginView, ForgotPass, SingUp, Contact, LogoutView, PortfolioView, BuyCoin
+from home.views import IndexView, NewsList, News_Page, AddArticle, AddTOFavorite, About_Us, Branding_Guide, Regulations, \
+    GetCandy
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,14 +33,14 @@ urlpatterns = [
     path('NewsList/', NewsList.as_view(), name='NewsList'),
     path('News/<int:id>/', News_Page.as_view(), name='News_page'),
     path('AddArticle', AddArticle.as_view(), name='AddArticle'),
-    path('portfolio', Portfolio.as_view(), name='Portfolio'),
+    path('portfolio', PortfolioView.as_view(), name='PortfolioView'),
     path('<int:id>/', AddTOFavorite.as_view(), name='AddTOFavorite'),
 
-path('About_Us', About_Us.as_view(), name='About_Us'),
-path('Branding_Guide', Branding_Guide.as_view(), name='Branding_Guide'),
-path('Regulations', Regulations.as_view(), name='Regulations'),
-path('GetCandy', GetCandy.as_view(), name='GetCandy'),
-
+    path('About_Us/', About_Us.as_view(), name='About_Us'),
+    path('Branding_Guide/', Branding_Guide.as_view(), name='Branding_Guide'),
+    path('Regulations/', Regulations.as_view(), name='Regulations'),
+    path('GetCandy/', GetCandy.as_view(), name='GetCandy'),
+    path('BuyCoin/<int:id>/', BuyCoin.as_view(), name='BuyCoin'),
 ]
 
 if settings.DEBUG:

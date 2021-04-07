@@ -104,7 +104,8 @@ def get_all_crypto_info():
     for coiny in CRYPTO_DATA:
         if 'binance-vnd' != coiny['id']:
             if 'dai' != coiny['id']:
-                list_id.append(coiny['id'])
+                if 'funfair' != coiny['id']:
+                    list_id.append(coiny['id'])
 
     market_cap_list = market_cap(list_id)
     keys_list = market_cap_list.keys()
