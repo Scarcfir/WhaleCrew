@@ -3,39 +3,14 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from account.forms import LoginForm, ForgotPassword, RegisterForm
-from account.models import Profile
-from home.models import CryptoCoins3, Portfolio, Transaction
+
 import re
 from django.core.mail import send_mail
 from django.conf import settings
 
-
-class LoginView(View):
-
-    def get(self, request):
-        tekst = 0
-        form = LoginForm()
-        return render(request, 'login.html', {'form': form})
-
-    def post(self, request):
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            user = authenticate(request, **form.cleaned_data)
-            if user is not None:
-                login(request, user)
-                redirect_url = request.GET.get('next', 'IndexPage')
-                return redirect(redirect_url)
-            else:
-                tekst = 1
-                return render(request, 'login.html', {'tekst': tekst, 'form': form})
-
-
-class ForgotPass(View):
-
-    def get(self, request):
-        form = ForgotPassword()
-        return render(request, 'ForgotPassword.html', {'form': form})
+from coins_app.models import Transaction, CoinsInfo
+from user_account_app.forms import LoginForm, ForgotPassword, RegisterForm
+from user_account_app.models import Profile, Portfolio
 
 
 class SingUp(View):
@@ -54,9 +29,9 @@ class SingUp(View):
                 return render(request, 'Sing_Up.html',
                               {'form': form, 'mail_error': mail_error})
             else:
-                uzytkownik = list(User.objects.filter(username=username))
+                user = list(User.objects.filter(username=username))
                 mail = list(User.objects.filter(email=email))
-                if uzytkownik == [] and mail == []:
+                if user == [] and mail == []:
                     password = form.cleaned_data['password1']
                     u = User.objects.create(username=username, email=email)
                     u.set_password(password)
@@ -65,19 +40,51 @@ class SingUp(View):
                     p.save()
                     return render(request, 'welcome.html', {'user': username})
                 else:
-                    if mail == []:
+                    if not mail:
                         error_mail = 1
                     else:
                         error_mail = 0
-                    if uzytkownik == []:
+                    if not user:
                         error_username = 1
                     else:
                         error_username = 0
-
                     return render(request, 'Sing_Up.html',
                                   {'form': form, 'error_mail': error_mail, 'error_user': error_username})
         else:
             return render(request, 'Sing_Up.html', {'form': form})
+
+
+class ForgotPass(View):
+
+    def get(self, request):
+        form = ForgotPassword()
+        return render(request, 'ForgotPassword.html', {'form': form})
+
+
+class LoginView(View):
+
+    def get(self, request):
+        form = LoginForm()
+        return render(request, 'login.html', {'form': form})
+
+    def post(self, request):
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = authenticate(request, **form.cleaned_data)
+            if user is not None:
+                login(request, user)
+                redirect_url = request.GET.get('next', 'IndexPage')
+                return redirect(redirect_url)
+            else:
+                tekst = 1
+                return render(request, 'login.html', {'tekst': tekst, 'form': form})
+
+
+class LogoutView(View):
+
+    def get(self, request):
+        logout(request)
+        return redirect('IndexPage')
 
 
 class Contact(View):
@@ -88,10 +95,10 @@ class Contact(View):
     def post(self, request):
         name = request.POST['txtName']
         email = request.POST['txtEmail']
-        phonenumber = request.POST['txtPhone']
+        phone_number = request.POST['txtPhone']
         msg = request.POST['txtMsg']
         subject = name
-        message = f"{msg} + {email} + {phonenumber}"
+        message = f"{msg} + {email} + {phone_number}"
         email_from = settings.EMAIL_HOST_USER
         recipient_list = ['whale.crew.help@gmail.com', ]
         send_mail(subject, message, email_from, recipient_list)
@@ -99,29 +106,12 @@ class Contact(View):
         return render(request, "contact.html")
 
 
-def validateEmail(email):
-    if len(email) > 6:
-        if re.match(r'\b[\w.-]+@[\w.-]+.\w{2,4}\b', email) != None:
-            return 1
-    return 0
-
-
-class LogoutView(View):
-
-    def get(self, request):
-        logout(request)
-        return redirect('IndexPage')
-
-
 class PortfolioView(View):
 
     def get(self, request):
         if not request.user.is_authenticated:
             return redirect('Login')
-
         portfolios = Portfolio.objects.filter(owner=request.user)
-
-
         paginator = Paginator(portfolios, 30)
         page = request.GET.get('page')
         obj = paginator.get_page(page)
@@ -129,17 +119,22 @@ class PortfolioView(View):
         return render(request, 'portfolio.html', context)
 
 
-class BuyCoin(View):
+class BuyCoinView(View):
 
-    def get(self, request,id):
+    def get(self, request, id):
         user = request.user
-        coin = CryptoCoins3.objects.get(id=id)
-        print(id)
+        coin = CoinsInfo.objects.get(id=id)
         t = Transaction.objects.create(profile=user.profile, coin=coin, quantity=1.0, price=10.0)
         t.save()
-
         if coin.favourite.filter(id=user.id).exists():
             coin.favourite.remove(user)
         else:
             coin.favourite.add(user)
         return redirect('PortfolioView')
+
+
+def validateEmail(email):
+    if len(email) > 6:
+        if re.match(r'\b[\w.-]+@[\w.-]+.\w{2,4}\b', email) is not None:
+            return 1
+    return 0

@@ -15,12 +15,13 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
-from account.views import LoginView, ForgotPass, SingUp, Contact, LogoutView, PortfolioView, BuyCoin
-from home.views import IndexView, NewsList, News_Page, AddArticle, AddTOFavorite, About_Us, Branding_Guide, Regulations, \
-    GetCandy
+
+from coins_app.views import *
+from user_account_app.views import *
+from home.views import *
+from footer_app.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,17 +31,17 @@ urlpatterns = [
     path('Forgot_Pass/', ForgotPass.as_view(), name='Forgot_Pass'),
     path('Sing_up/', SingUp.as_view(), name='Sing_up'),
     path('Contact/', Contact.as_view(), name='Contact'),
-    path('NewsList/', NewsList.as_view(), name='NewsList'),
-    path('News/<int:id>/', News_Page.as_view(), name='News_page'),
-    path('AddArticle', AddArticle.as_view(), name='AddArticle'),
+    path('NewsList/', NewsListView.as_view(), name='NewsList'),
+    path('News/<int:id>/', NewsPageView.as_view(), name='News_page'),
+    path('AddArticle', AddArticleView.as_view(), name='AddArticle'),
     path('portfolio', PortfolioView.as_view(), name='PortfolioView'),
-    path('<int:id>/', AddTOFavorite.as_view(), name='AddTOFavorite'),
+    path('<int:id>/', AddToFavoriteView.as_view(), name='AddTOFavorite'),
 
-    path('About_Us/', About_Us.as_view(), name='About_Us'),
-    path('Branding_Guide/', Branding_Guide.as_view(), name='Branding_Guide'),
-    path('Regulations/', Regulations.as_view(), name='Regulations'),
-    path('GetCandy/', GetCandy.as_view(), name='GetCandy'),
-    path('BuyCoin/<int:id>/', BuyCoin.as_view(), name='BuyCoin'),
+    path('About_Us/', AboutUsView.as_view(), name='About_Us'),
+    path('Branding_Guide/', BrandingGuideView.as_view(), name='Branding_Guide'),
+    path('Regulations/', RegulationsView.as_view(), name='Regulations'),
+    path('GetCandy/', GetCandyView.as_view(), name='GetCandy'),
+    path('BuyCoin/<int:id>/', BuyCoinView.as_view(), name='BuyCoin'),
 ]
 
 if settings.DEBUG:

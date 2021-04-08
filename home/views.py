@@ -1,13 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 
-# Create your views here.
 from django.views import View
 from django.core.paginator import Paginator
 
-from home.forms import ImageForm
-from home.models import News, Newsletter, CryptoCoins3, Portfolio
+from footer_app.models import Newsletter
+from home.models import NewsArticle as News
+from coins_app.models import CoinsInfo
 import re
-import crypto_coin.functions.get_binance_data as get_crypto_data
+import coins_app.functions.get_binance_data as get_crypto_data
 
 
 class IndexView(View):
@@ -26,34 +26,34 @@ class IndexView(View):
             usd_24h_vol = format((int(coin['usd_24h_vol']) / 1000000000), '.2f') if format(
                 float(coin['usd_24h_vol']), '.2f'
             ) != 0 else format(float(coin['usd_24h_vol']), '.2f')
-            coin_name = CryptoCoins3.objects.values_list('name', flat=True)
+            coin_name = CoinsInfo.objects.values_list('name', flat=True)
             if not name in coin_name:
 
-                CryptoCoins3.objects.create(name=name, symbol=symbol, price=price,
-                                            usd_market_cap=usd_market_cap, usd_24h_vol=usd_24h_vol)
+                CoinsInfo.objects.create(name=name, symbol=symbol, price=price,
+                                         usd_market_cap=usd_market_cap, usd_24h_vol=usd_24h_vol)
             else:
-                crypto_to_update = CryptoCoins3.objects.get(name=name)
+                crypto_to_update = CoinsInfo.objects.get(name=name)
                 crypto_to_update.price = price
                 crypto_to_update.usd_market_cap = usd_market_cap
                 crypto_to_update.usd_24h_vol = usd_24h_vol
                 coins_to_update.append(crypto_to_update)
 
-        CryptoCoins3.objects.bulk_update(coins_to_update, ['price', 'usd_market_cap', 'usd_24h_vol'])
+        CoinsInfo.objects.bulk_update(coins_to_update, ['price', 'usd_market_cap', 'usd_24h_vol'])
 
-        objects = CryptoCoins3.objects.all()
-        crypto_coin = objects.order_by("usd_market_cap").reverse()
+        All_coins_info = CoinsInfo.objects.all()
+        crypto_coin = All_coins_info.order_by("usd_market_cap").reverse()
         paginator = Paginator(crypto_coin, 30)
         page = request.GET.get('page')
         obj = paginator.get_page(page)
 
-        list = []
+        fav_coin_list = []
         if request.user.is_authenticated:
             user_fav = request.user
             favourite_coins = user_fav.favourite.all()
             for i in favourite_coins:
-                list.append(i.id)
+                fav_coin_list.append(i.id)
 
-        context = {'object_list': crypto_coin, 'paginator': obj, 'favourite_coins': list}
+        context = {'object_list': crypto_coin, 'paginator': obj, 'favourite_coins': fav_coin_list}
         return render(request, "index.html", context)
 
     def post(self, request):
@@ -66,10 +66,11 @@ class IndexView(View):
         return render(request, "index.html", {'object_list': create})
 
 
-class NewsList(View):
+class NewsListView(View):
+
     def get(self, request):
-        object = News.objects.all()
-        objects = object.order_by("created").reverse()
+        news_list = News.objects.all()
+        objects = news_list.order_by("created").reverse()
         paginator = Paginator(objects, 6)
         page = request.GET.get('page')
         news = paginator.get_page(page)
@@ -77,69 +78,32 @@ class NewsList(View):
         return render(request, "News_List.html", context)
 
 
-class News_Page(View):
+class NewsPageView(View):
+
     def get(self, request, id):
         objects = News.objects.get(id=id)
         return render(request, "news_page.html", {'obj': objects})
 
 
-class AddArticle(View):
+class AddArticleView(View):
 
     def get(self, request):
         return render(request, "add_news.html")
 
     def post(self, request):
-        Title = request.POST['Title']
+        title = request.POST['Title']
         short_desc = request.POST['ShortDesc']
         desc = request.POST['Text']
         photo_file = request.FILES['photo']
-        obj = News.objects.create(title=Title, short_desc=short_desc, description=desc, picture_file=photo_file)
+        obj = News.objects.create(title=title, short_desc=short_desc, description=desc, picture_file=photo_file)
         obj.save()
-        object = News.objects.all()
-        objects = object.order_by("created").reverse()
+        news_list = News.objects.all()
+        objects = news_list.order_by("created").reverse()
         return render(request, "News_List.html", {'object_list': objects})
-
-
-class AddTOFavorite(View):
-
-    def get(self, request, id):
-        user = request.user
-        coin = CryptoCoins3.objects.get(id=id)
-        if not user.portfolio_set.filter(coin=coin).exists():
-            Portfolio.objects.create(owner=user, coin=coin)
-        if coin.favourite.filter(id=user.id).exists():
-            coin.favourite.remove(user)
-        else:
-            coin.favourite.add(user)
-        return redirect('IndexPage')
 
 
 def validateEmail(email):
     if len(email) > 6:
-        if re.match(r'\b[\w.-]+@[\w.-]+.\w{2,4}\b', email) != None:
+        if re.match(r'\b[\w.-]+@[\w.-]+.\w{2,4}\b', email) is not None:
             return 1
     return 0
-
-
-class About_Us(View):
-
-    def get(self, request):
-        return render(request, 'about_us.html')
-
-
-class Branding_Guide(View):
-
-    def get(self, request):
-        return render(request, 'Branding_Guide.html')
-
-
-class Regulations(View):
-
-    def get(self, request):
-        return render(request, 'Regulations.html')
-
-
-class GetCandy(View):
-
-    def get(self, request):
-        return render(request, 'GetCandy.html')
