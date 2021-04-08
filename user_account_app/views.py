@@ -68,31 +68,27 @@ class ForgotPass(View):
     def post(self, request):
         form = ForgotPassword(request.POST)
         domain = request.headers['Host']
-        print(form)
-        print(domain)
+
         if form.is_valid():
             email = form.cleaned_data['email']
-            associated_users = User.objects.filter(email=email)
-            if associated_users.exists():
-                for user in associated_users:
-                    subject = "Password Reset Requested"
-                    email_template_name = "admin/accounts/password/password_reset_email.txt"
-                    c = {
-                        "email": user.email,
-                        'domain': domain,
-                        'site_name': 'Interface',
-                        "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                        "user": user,
-                        'token': default_token_generator.make_token(user),
-                        'protocol': 'http',
-                    }
-                    email = render_to_string(email_template_name, c)
-                    try:
-                        pass
-                        # send_mail(subject, email, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
-                    except BadHeaderError:
-                        return HttpResponse('Invalid header found.')
-                    return redirect("/core/password_reset/done/")
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                return redirect('Forgot_Pass')
+
+            token = default_token_generator.make_token(user)
+            context = {
+                "subject": "Password Reset Requested",
+                "link": f"http://{domain}/reset/{token}"
+            }
+            email = render_to_string("reset_password.html", context)
+            print(email)
+            try:
+                pass
+                # send_mail(subject, email, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
+            return redirect("/core/password_reset/done/")
         return redirect('Forgot_Pass')
 
 

@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 from pathlib import Path
-from WhaleCrew.local_settings import SECRET_KEY
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -111,9 +110,17 @@ STATICFILES_DIRS = [
 ]
 
 try:
-    from WhaleCrew.local_settings import DATABASES, EMAIL_HOST_PASSWORD, EMAIL_HOST_USER, EMAIL_HOST, EMAIL_BACKEND, \
-        EMAIL_PORT, EMAIL_USE_TLS
-except ModuleNotFoundError:
+    from WhaleCrew.local_settings import (
+        DATABASES,
+        EMAIL_HOST_PASSWORD,
+        EMAIL_HOST_USER,
+        EMAIL_HOST,
+        EMAIL_BACKEND,
+        EMAIL_PORT,
+        EMAIL_USE_TLS,
+        SECRET_KEY
+    )
+except (ModuleNotFoundError, ImportError):
     print("Brak konfiguracji bazy danych w pliku local_settings.py!")
     print("Uzupełnij dane i spróbuj ponownie!")
     exit(0)

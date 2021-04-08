@@ -6,7 +6,7 @@
                 <img src="https://image.ibb.co/kUagtU/rocket_contact.png" alt="rocket_contact"/>
             </div>
 
-            <form method="post">
+            <form method="post" action="{% url 'Contact' %}">
 
                 {% csrf_token %}
 
