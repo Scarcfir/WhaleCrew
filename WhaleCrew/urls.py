@@ -36,12 +36,12 @@ urlpatterns = [
     path('AddArticle', AddArticleView.as_view(), name='AddArticle'),
     path('portfolio', PortfolioView.as_view(), name='PortfolioView'),
     path('<int:id>/', AddToFavoriteView.as_view(), name='AddTOFavorite'),
+    path('reset/<slug:token>/', resetPasswordView, name='ResetPassword'),
 
     path('About_Us/', AboutUsView.as_view(), name='About_Us'),
     path('Branding_Guide/', BrandingGuideView.as_view(), name='Branding_Guide'),
     path('Regulations/', RegulationsView.as_view(), name='Regulations'),
     path('GetCandy/', GetCandyView.as_view(), name='GetCandy'),
-
 
 ]
 

@@ -1,3 +1,4 @@
+import requests
 from django.contrib.auth.tokens import default_token_generator
 from django.core.paginator import Paginator
 from django.http import HttpResponse
@@ -14,8 +15,8 @@ from django.core.mail import send_mail, BadHeaderError
 from django.conf import settings
 
 from coins_app.models import Transaction, CoinsInfo
-from user_account_app.forms import LoginForm, ForgotPassword, RegisterForm
-from user_account_app.models import Profile, Portfolio
+from user_account_app.forms import LoginForm, ForgotPassword, RegisterForm, ResetPassword
+from user_account_app.models import Profile, Portfolio, PasswordRstToken
 
 
 class SingUp(View):
@@ -68,7 +69,6 @@ class ForgotPass(View):
     def post(self, request):
         form = ForgotPassword(request.POST)
         domain = request.headers['Host']
-
         if form.is_valid():
             email = form.cleaned_data['email']
             try:
@@ -77,19 +77,41 @@ class ForgotPass(View):
                 return redirect('Forgot_Pass')
 
             token = default_token_generator.make_token(user)
+            PasswordRstToken.objects.filter(user=user).delete()
+            PasswordRstToken.objects.create(token=token, user=user)
+            link = f"http://{domain}/reset/{token}"
             context = {
-                "subject": "Password Reset Requested",
-                "link": f"http://{domain}/reset/{token}"
+                "link": link
             }
-            email = render_to_string("reset_password.html", context)
-            print(email)
+            html_message = render_to_string("reset_password.html", context)
+            message = f"Hi, please reset your password with this link: {link}"
             try:
-                pass
-                # send_mail(subject, email, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+                send_mail("Password Reset Requested", message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False, html_message=html_message)
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
-            return redirect("/core/password_reset/done/")
-        return redirect('Forgot_Pass')
+        return redirect('Forgot_Pass') #TODO Reset
+
+
+def resetPasswordView(request, token):
+    if request.method == 'GET':
+        try:
+            password_rst_token = PasswordRstToken.objects.get(token=token)
+        except PasswordRstToken.DoesNotExist:
+            return redirect('IndexPage')
+        form = ResetPassword(initial={"email": password_rst_token.user.email})
+        return render(request, 'rst_password.html', {'form': form})
+    else:
+
+        form = ResetPassword(request.POST)
+        try:
+            password_rst_token = PasswordRstToken.objects.get(token=token)
+        except PasswordRstToken.DoesNotExist:
+            return redirect('IndexPage')
+        if form.is_valid():
+            password = form.cleaned_data['password1']
+            password_rst_token.user.set_password(password)
+            password_rst_token.user.save()
+        return redirect('Login')
 
 
 class LoginView(View):
@@ -168,5 +190,3 @@ def validateEmail(email):
         if re.match(r'\b[\w.-]+@[\w.-]+.\w{2,4}\b', email) is not None:
             return 1
     return 0
-
-
