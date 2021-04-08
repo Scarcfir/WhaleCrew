@@ -41,7 +41,8 @@ urlpatterns = [
     path('Branding_Guide/', BrandingGuideView.as_view(), name='Branding_Guide'),
     path('Regulations/', RegulationsView.as_view(), name='Regulations'),
     path('GetCandy/', GetCandyView.as_view(), name='GetCandy'),
-    path('BuyCoin/<int:id>/', BuyCoinView.as_view(), name='BuyCoin'),
+
+
 ]
 
 if settings.DEBUG:

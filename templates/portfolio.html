@@ -22,8 +22,10 @@
             <th scope="col">Actual Price</th>
             <th scope="col">Market Cap</th>
             <th scope="col">Quantity of Coin</th>
+            <th scope="col">Holdings</th>
             <th scope="col">Balance</th>
             <th scope="col">Transaction</th>
+
         </tr>
         </thead>
         <tbody>
@@ -35,16 +37,73 @@
                 <td>{{ obj.coin.symbol }}</td>
                 <td>{{ obj.coin.price }} $</td>
                 <td>{{ obj.coin.usd_market_cap }} mld $</td>
-
                 <td>{{ obj.quantity }} </td>
-                <td>{{ obj.usd_market_cap }}  $</td>
-                <td><a href="{{ obj.get_buy_url }}">LINK</a></td>
+                <td>{{ obj.current_value_of_holdings }} $</td>
+                {% if obj.balance > 0 %}
+                    <td><p style="color:green">{{ obj.balance }} $</p></td>
+                {% elif obj.balance < 0 %}
+                    <td><p style="color:red">{{ obj.balance }} $</p></td>
+                {% else %}
+                    <td>{{ obj.balance }} $</td>
+                {% endif %}
+
+                <td>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            data-bs-whatever="{{ obj.coin.name }}" data-bs-price="{{ obj.coin.price }}"
+                            data-bs-idcoin="{{ obj.coin.id }}">Add Transaction
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">New transaction</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+
+                                <div class="modal-body">
+
+                                    <form method="post">
+                                        {% csrf_token %}
+
+                                        <div class="mb-3">
+                                            <label for="price" class="col-form-label">Price per coin:</label>
+                                            <input name="price_act" type="text" class="form-control" id="price"
+                                                   value="0">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="amount" class="col-form-label">Quantity:</label>
+                                            <input name="amount" type="text" class="form-control" id="quantity"
+                                                   value="0">
+                                        </div>
+                                        <input type="hidden" id="id_coin" name="id_coin" value="{{ obj.coin.id }}">
+                                        <input type="submit" id="submit-form" class="btnContact" value="Add"/>
+                                    </form>
+
+                                </div>
+
+                                <div class="modal-footer">
+
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
             </tr>
         {% endfor %}
 
         </tbody>
     </table>
     <br>
+
+
 
     {% if paginator.has_other_pages %}
 
@@ -77,6 +136,30 @@
             {% endif %}
         </ul>
 
+
+
+
     {% endif %}
     <br>
+    <script>
+        var exampleModal = document.getElementById('exampleModal')
+        exampleModal.addEventListener('show.bs.modal', function (event) {
+            // Button that triggered the modal
+            var button = event.relatedTarget
+            // Extract info from data-bs-* attributes
+            var recipient = button.getAttribute('data-bs-whatever')
+            var price = button.getAttribute('data-bs-price')
+            var id_coin = button.getAttribute('data-bs-idcoin')
+
+            var modalTitle = exampleModal.querySelector('.modal-title')
+            modalTitle.textContent = 'New transaction: ' + recipient
+            var modalBodyInput = exampleModal.querySelectorAll('.modal-body input')
+            modalBodyInput[1].value = price
+            modalBodyInput[3].value = id_coin
+
+
+        })</script>
+
+
+
 {% endblock %}

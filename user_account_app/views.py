@@ -84,7 +84,7 @@ class LogoutView(View):
 
     def get(self, request):
         logout(request)
-        return redirect('IndexPage')
+        return redirect('NewsList')
 
 
 class Contact(View):
@@ -118,19 +118,21 @@ class PortfolioView(View):
         context = {'paginator': obj}
         return render(request, 'portfolio.html', context)
 
-
-class BuyCoinView(View):
-
-    def get(self, request, id):
+    def post(self, request):
         user = request.user
-        coin = CoinsInfo.objects.get(id=id)
-        t = Transaction.objects.create(profile=user.profile, coin=coin, quantity=1.0, price=10.0)
+        buy_price = request.POST['price_act']
+        buy_price = buy_price.replace(",", ".")
+        quantity = request.POST['amount']
+        quantity = quantity.replace(",", ".")
+        buy_price = buy_price.replace(",", ".")
+        coin_id = request.POST['id_coin']
+        coin = CoinsInfo.objects.get(id=coin_id)
+        t = Transaction.objects.create(profile=user.profile, coin=coin, quantity=quantity, price=buy_price)
         t.save()
-        if coin.favourite.filter(id=user.id).exists():
-            coin.favourite.remove(user)
-        else:
-            coin.favourite.add(user)
         return redirect('PortfolioView')
+
+
+
 
 
 def validateEmail(email):

@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.urls import reverse
 
-from coins_app.models import Transaction
+from coins_app.models import Transaction, CoinsInfo
 
 
 class Profile(models.Model):
@@ -18,9 +18,29 @@ class Portfolio(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     coin = models.ForeignKey("coins_app.CoinsInfo", on_delete=models.CASCADE)
 
-    def get_buy_url(self):
-        return reverse('BuyCoin', kwargs={'id': self.coin.id})
+    # def get_buy_url(self):
+    #     return reverse('BuyCoin', kwargs={'id': self.coin.id})
 
     @property
     def quantity(self):
-        return Transaction.objects.filter(profile=self.owner.profile, coin__id=self.coin.id).aggregate(amount=Sum('quantity'))['amount'] or 0
+        return \
+            float(format((Transaction.objects.filter(profile=self.owner.profile, coin__id=self.coin.id).aggregate(
+                amount=Sum('quantity'))[
+                'amount'] or 0), '.2f'))
+
+    @property
+    def current_value_of_holdings(self):
+        value_now = (Transaction.objects.filter(profile=self.owner.profile, coin__id=self.coin.id).aggregate(
+            amount=Sum('quantity'))['amount'] or 0) * CoinsInfo.objects.get(id=self.coin.id).price
+        return format(float(value_now), '.2f')
+
+    @property
+    def balance(self):
+        actual_holdings = self.current_value_of_holdings
+        list_of_transaction = Transaction.objects.filter(profile=self.owner.profile, coin__id=self.coin.id)
+        average_purchase_value = 0
+        for i in list_of_transaction:
+            average_purchase_value += i.price * i.quantity
+        average_purchase_value = '{:.2f}'.format(average_purchase_value)
+        return float(format(float(actual_holdings) - float(average_purchase_value), '.2f'))
+

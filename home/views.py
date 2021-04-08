@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from django.views import View
 from django.core.paginator import Paginator
@@ -57,13 +57,12 @@ class IndexView(View):
         return render(request, "index.html", context)
 
     def post(self, request):
-        create = False
+
         email = request.POST['EMAIL']
         email_exist = list(Newsletter.objects.filter(email=email))
         if validateEmail(email) and email_exist == []:
             Newsletter.objects.create(email=email)
-            create = True
-        return render(request, "index.html", {'object_list': create})
+        return redirect('IndexPage')
 
 
 class NewsListView(View):
@@ -99,7 +98,7 @@ class AddArticleView(View):
         obj.save()
         news_list = News.objects.all()
         objects = news_list.order_by("created").reverse()
-        return render(request, "News_List.html", {'object_list': objects})
+        return redirect('NewsList')
 
 
 def validateEmail(email):

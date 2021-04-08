@@ -14,7 +14,7 @@ class CoinsInfo(models.Model):
         return f"{self.id}"
 
     def __str__(self):
-        return f'{self.name} {self.symbol}'
+        return f'{self.name} {self.symbol} {self.price}'
 
 
 class Transaction(models.Model):

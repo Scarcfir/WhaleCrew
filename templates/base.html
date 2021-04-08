@@ -40,9 +40,11 @@
         <li class="nav-item">
             <a class="nav-link" href="{% url 'NewsList' %}">News</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'AddArticle' %}">Add News</a>
-        </li>
+        {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'AddArticle' %}">Add News</a>
+            </li>
+        {% endif %}
         <li class="nav-item">
             <a class="nav-link" href="{% url 'PortfolioView' %}">Portfolio</a>
         </li>
@@ -90,18 +92,21 @@
         <!-- Section: Social media -->
         <section class="mb-4">
             <!-- Facebook -->
-            <a class="btn btn-outline-light btn-floating m-1" href="https://www.facebook.com/KarolMaciejOdrobinski/" role="button"
+            <a class="btn btn-outline-light btn-floating m-1" href="https://www.facebook.com/KarolMaciejOdrobinski/"
+               role="button"
             ><i class="fab fa-facebook-f"></i
             ></a>
 
 
             <!-- Instagram -->
-            <a class="btn btn-outline-light btn-floating m-1" href="https://www.instagram.com/karolmaciej/" role="button"
+            <a class="btn btn-outline-light btn-floating m-1" href="https://www.instagram.com/karolmaciej/"
+               role="button"
             ><i class="fab fa-instagram"></i
             ></a>
 
             <!-- Linkedin -->
-            <a class="btn btn-outline-light btn-floating m-1" href="https://www.linkedin.com/in/karolodrobinski/" role="button"><i class="fab fa-linkedin-in"></i></a>
+            <a class="btn btn-outline-light btn-floating m-1" href="https://www.linkedin.com/in/karolodrobinski/"
+               role="button"><i class="fab fa-linkedin-in"></i></a>
 
             <!-- Github -->
             <a class="btn btn-outline-light btn-floating m-1" href="https://github.com/Scarcfir" role="button"
