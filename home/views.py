@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 
 from django.views import View
 from django.core.paginator import Paginator
+from django.core.mail import send_mail
 
 from footer_app.models import Newsletter
 from home.models import NewsArticle as News
@@ -57,7 +58,6 @@ class IndexView(View):
         return render(request, "index.html", context)
 
     def post(self, request):
-
         email = request.POST['EMAIL']
         email_exist = list(Newsletter.objects.filter(email=email))
         if validateEmail(email) and email_exist == []:
@@ -106,3 +106,5 @@ def validateEmail(email):
         if re.match(r'\b[\w.-]+@[\w.-]+.\w{2,4}\b', email) is not None:
             return 1
     return 0
+
+

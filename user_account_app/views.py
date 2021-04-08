@@ -1,11 +1,16 @@
+from django.contrib.auth.tokens import default_token_generator
 from django.core.paginator import Paginator
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from django.views import View
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 
 import re
-from django.core.mail import send_mail
+from django.core.mail import send_mail, BadHeaderError
 from django.conf import settings
 
 from coins_app.models import Transaction, CoinsInfo
@@ -59,6 +64,36 @@ class ForgotPass(View):
     def get(self, request):
         form = ForgotPassword()
         return render(request, 'ForgotPassword.html', {'form': form})
+
+    def post(self, request):
+        form = ForgotPassword(request.POST)
+        domain = request.headers['Host']
+        print(form)
+        print(domain)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            associated_users = User.objects.filter(email=email)
+            if associated_users.exists():
+                for user in associated_users:
+                    subject = "Password Reset Requested"
+                    email_template_name = "admin/accounts/password/password_reset_email.txt"
+                    c = {
+                        "email": user.email,
+                        'domain': domain,
+                        'site_name': 'Interface',
+                        "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                        "user": user,
+                        'token': default_token_generator.make_token(user),
+                        'protocol': 'http',
+                    }
+                    email = render_to_string(email_template_name, c)
+                    try:
+                        pass
+                        # send_mail(subject, email, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+                    except BadHeaderError:
+                        return HttpResponse('Invalid header found.')
+                    return redirect("/core/password_reset/done/")
+        return redirect('Forgot_Pass')
 
 
 class LoginView(View):
@@ -132,11 +167,10 @@ class PortfolioView(View):
         return redirect('PortfolioView')
 
 
-
-
-
 def validateEmail(email):
     if len(email) > 6:
         if re.match(r'\b[\w.-]+@[\w.-]+.\w{2,4}\b', email) is not None:
             return 1
     return 0
+
+
