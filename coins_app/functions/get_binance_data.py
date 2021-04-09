@@ -1,6 +1,3 @@
-import sys
-from concurrent.futures import thread
-
 from binance.client import Client
 import pytz, dateparser
 from datetime import datetime

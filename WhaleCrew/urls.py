@@ -4,7 +4,7 @@ from django.urls import path
 
 from coins_app.views import *
 from user_account_app.views import *
-from home.views import *
+from home.views import IndexView, NewsListView, NewsPageView, AddArticleView
 from footer_app.views import *
 
 urlpatterns = [

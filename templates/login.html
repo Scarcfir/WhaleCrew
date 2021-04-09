@@ -68,7 +68,7 @@ color: #cccccc;
             <br>
             New to WhaleCrew? <a class="underlineHover" href="{% url 'Sing_up' %}">Create Account</a>
             <br>
-            <form method="post">
+            <form method="post" action="{% url 'Login' %}">
                 {% csrf_token %}
                     {% if tekst == 1 %}
                        !!! Invalid Username or Password !!!
