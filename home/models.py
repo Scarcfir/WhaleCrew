@@ -10,7 +10,15 @@ class NewsArticle(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        permissions = (
+            ("add_article", "Can publish articles"),
+        )
+
     def get_detail_url(self):
+        """
+        Return the url of article.
+        """
         return f"/News/{self.id}"
 
     def __str__(self):

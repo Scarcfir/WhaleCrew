@@ -9,6 +9,7 @@
 
             {% csrf_token %}
             <center><h3>Create News</h3></center>
+
             <div class="row text-center">
                 <div class="col-md-12">
                     <div class="form-group">
@@ -37,6 +38,9 @@
                               style="width: 100%; height: 250px;"></textarea>
                 </div>
                 <br><br>
+                {% if not perm %}
+                <h3 style="color:red"> You don't have permission to ADD ARTICLE ! </h3>
+                {% endif %}
                 <div class="form-group">
                     <input type="submit" name="btnSubmit" class="btnContact" value="Add Article"/>
                 </div>

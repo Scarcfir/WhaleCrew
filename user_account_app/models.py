@@ -27,6 +27,9 @@ class Portfolio(models.Model):
 
     @property
     def quantity(self):
+        """
+        Return the quantity of User's portfolio.
+        """
         return \
             float(format((Transaction.objects.filter(profile=self.owner.profile, coin__id=self.coin.id).aggregate(
                 amount=Sum('quantity'))[
@@ -34,12 +37,18 @@ class Portfolio(models.Model):
 
     @property
     def current_value_of_holdings(self):
+        """
+        Return the value of User's holdings.
+        """
         value_now = (Transaction.objects.filter(profile=self.owner.profile, coin__id=self.coin.id).aggregate(
             amount=Sum('quantity'))['amount'] or 0) * CoinsInfo.objects.get(id=self.coin.id).price
         return format(float(value_now), '.2f')
 
     @property
     def balance(self):
+        """
+        Return the balance of User's holdings compared to buy costs.
+        """
         actual_holdings = self.current_value_of_holdings
         list_of_transaction = Transaction.objects.filter(profile=self.owner.profile, coin__id=self.coin.id)
         average_purchase_value = 0

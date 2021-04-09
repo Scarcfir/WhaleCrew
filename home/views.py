@@ -1,9 +1,8 @@
+from django.contrib.auth.models import Permission
+from django.db import IntegrityError
 from django.shortcuts import render, redirect
-
 from django.views import View
 from django.core.paginator import Paginator
-from django.core.mail import send_mail
-
 from footer_app.models import Newsletter
 from home.models import NewsArticle as News
 from coins_app.models import CoinsInfo
@@ -12,6 +11,11 @@ import coins_app.functions.get_binance_data as get_crypto_data
 
 
 class IndexView(View):
+    """
+    Base View class to show list of crypto coin with informations about market cap, price.
+    Method Get : Generate list of coin.
+    Method Post: Put new mail to newsletter database
+    """
 
     def get(self, request):
         get_crypto_info = get_crypto_data.update_db_crypto_coin()
@@ -29,9 +33,11 @@ class IndexView(View):
             ) != 0 else format(float(coin['usd_24h_vol']), '.2f')
             coin_name = CoinsInfo.objects.values_list('name', flat=True)
             if not name in coin_name:
-
-                CoinsInfo.objects.create(name=name, symbol=symbol, price=price,
-                                         usd_market_cap=usd_market_cap, usd_24h_vol=usd_24h_vol)
+                try:
+                    CoinsInfo.objects.create(name=name, symbol=symbol, price=price,
+                                             usd_market_cap=usd_market_cap, usd_24h_vol=usd_24h_vol)
+                except IntegrityError:
+                    print(name, " couldn't add")
             else:
                 crypto_to_update = CoinsInfo.objects.get(name=name)
                 crypto_to_update.price = price
@@ -66,6 +72,9 @@ class IndexView(View):
 
 
 class NewsListView(View):
+    """
+    Base class view to show the News list
+    """
 
     def get(self, request):
         news_list = News.objects.all()
@@ -78,6 +87,9 @@ class NewsListView(View):
 
 
 class NewsPageView(View):
+    """
+    Base class view to show the News page by news ID
+    """
 
     def get(self, request, id):
         objects = News.objects.get(id=id)
@@ -85,26 +97,35 @@ class NewsPageView(View):
 
 
 class AddArticleView(View):
+    """
+    Base class view to add the new article by the current user.
+    """
 
     def get(self, request):
-        return render(request, "add_news.html")
+        user = request.user
+        context = {'perm': True}
+        return render(request, "add_news.html", context)
 
     def post(self, request):
-        title = request.POST['Title']
-        short_desc = request.POST['ShortDesc']
-        desc = request.POST['Text']
-        photo_file = request.FILES['photo']
-        obj = News.objects.create(title=title, short_desc=short_desc, description=desc, picture_file=photo_file)
-        obj.save()
-        news_list = News.objects.all()
-        objects = news_list.order_by("created").reverse()
-        return redirect('NewsList')
+        user = request.user
+        if user.has_perm("home.add_article"):
+            title = request.POST['Title']
+            short_desc = request.POST['ShortDesc']
+            desc = request.POST['Text']
+            photo_file = request.FILES['photo']
+            obj = News.objects.create(title=title, short_desc=short_desc, description=desc, picture_file=photo_file)
+            obj.save()
+            return redirect('NewsList')
+        else:
+            context = {'perm': False}
+            return render(request, "add_news.html", context)
 
 
 def validateEmail(email):
+    """
+    Function to validate email.
+    """
     if len(email) > 6:
         if re.match(r'\b[\w.-]+@[\w.-]+.\w{2,4}\b', email) is not None:
             return 1
     return 0
-
-

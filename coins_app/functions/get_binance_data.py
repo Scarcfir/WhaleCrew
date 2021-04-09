@@ -27,6 +27,9 @@ def date_to_milliseconds(date_str):
 
 
 def get_all_cryptodata():
+    """
+    Return date of coin from Binance API
+    """
     client = Client("", "")
     symbol = "ETHUSDT"
     year = datetime.now().year
@@ -58,17 +61,26 @@ def get_all_cryptodata():
 
 
 def CoinGeckoGet():
+    """
+    Return the id list of coins
+    """
     cg = CoinGeckoAPI()
     id = cg.get_coins_list()
     return id
 
 
 def market_cap(ids):
+    """
+    Return values of market cap by id.
+    """
     cg = CoinGeckoAPI()
     return cg.get_price(ids=ids, vs_currencies='usd', include_market_cap='true', include_24hr_vol='true')
 
 
 def get_all_crypto_info():
+    """
+    Return list of  Crypto Coin info.
+    """
     coins = CoinGeckoGet()
     data_cryptodata = get_all_cryptodata()
 
@@ -121,6 +133,9 @@ def get_all_crypto_info():
 
 
 def update_db_crypto_coin():
+    """
+    Return list of crypto coin info for IndexView.
+    """
     get_crypto_info = get_all_crypto_info()
     return get_crypto_info
 

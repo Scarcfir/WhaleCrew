@@ -7,6 +7,10 @@ from user_account_app.models import Portfolio
 
 class AddToFavoriteView(View):
 
+    """
+    Base View class to add coins to favourite for the current user.
+    """
+
     def get(self, request, id):
         user = request.user
         coin = CoinsInfo.objects.get(id=id)

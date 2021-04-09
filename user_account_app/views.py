@@ -1,26 +1,23 @@
-import requests
 from django.contrib.auth.tokens import default_token_generator
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
 from django.views import View
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-
 import re
 from django.core.mail import send_mail, BadHeaderError
 from django.conf import settings
-
 from coins_app.models import Transaction, CoinsInfo
 from user_account_app.forms import LoginForm, ForgotPassword, RegisterForm, ResetPassword
 from user_account_app.models import Profile, Portfolio, PasswordRstToken
 
 
 class SingUp(View):
-
+    """
+    Class View to Sing Up new User.
+    """
     def get(self, request):
         form = RegisterForm()
         return render(request, 'Sing_Up.html', {'form': form})
@@ -61,7 +58,9 @@ class SingUp(View):
 
 
 class ForgotPass(View):
-
+    """
+    Class view to remind password for Users
+    """
     def get(self, request):
         form = ForgotPassword()
         return render(request, 'ForgotPassword.html', {'form': form})
@@ -93,6 +92,9 @@ class ForgotPass(View):
 
 
 def resetPasswordView(request, token):
+    """
+    View to reset Password for User from unique mail url information.
+    """
     if request.method == 'GET':
         try:
             password_rst_token = PasswordRstToken.objects.get(token=token)
@@ -115,7 +117,9 @@ def resetPasswordView(request, token):
 
 
 class LoginView(View):
-
+    """
+    Base class view to Log in the User
+    """
     def get(self, request):
         form = LoginForm()
         return render(request, 'login.html', {'form': form})
@@ -134,14 +138,18 @@ class LoginView(View):
 
 
 class LogoutView(View):
-
+    """
+    Base class View to log
+    """
     def get(self, request):
         logout(request)
         return redirect('NewsList')
 
 
 class Contact(View):
-
+    """
+    Base class view to contact form.
+    """
     def get(self, request):
         return render(request, "contact.html")
 
@@ -160,7 +168,9 @@ class Contact(View):
 
 
 class PortfolioView(View):
-
+    """
+    Base class view for authenticated User. View show the favourite's User coins , balance and allowed to do the Transaction.
+    """
     def get(self, request):
         if not request.user.is_authenticated:
             return redirect('Login')
@@ -186,6 +196,9 @@ class PortfolioView(View):
 
 
 def validateEmail(email):
+    """
+    Function to validate email.
+    """
     if len(email) > 6:
         if re.match(r'\b[\w.-]+@[\w.-]+.\w{2,4}\b', email) is not None:
             return 1

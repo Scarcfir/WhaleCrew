@@ -11,6 +11,9 @@ class CoinsInfo(models.Model):
     favourite = models.ManyToManyField(User, related_name="favourite", blank=True, default=False)
 
     def get_detail_url(self):
+        """
+        Return the url of Coin by ID
+        """
         return f"{self.id}"
 
     def __str__(self):
