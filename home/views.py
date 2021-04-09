@@ -6,7 +6,7 @@ from footer_app.models import Newsletter
 from home.models import NewsArticle as News
 from coins_app.models import CoinsInfo
 import re
-# import coins_app.functions.get_binance_data as get_crypto_data
+import coins_app.functions.get_binance_data as get_crypto_data
 
 
 class IndexView(View):
@@ -17,7 +17,7 @@ class IndexView(View):
     """
 
     def get(self, request):
-        get_crypto_info = [] #get_crypto_data.update_db_crypto_coin()
+        get_crypto_info = get_crypto_data.update_db_crypto_coin()
         coins_to_update = []
         for coin in get_crypto_info:
             name = coin['name']
