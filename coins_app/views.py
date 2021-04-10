@@ -15,17 +15,13 @@ class AddToFavoriteView(View):
         user = request.user
         coin = CoinsInfo.objects.get(id=id)
         if coin.favourite.filter(id=user.id).exists():
-            print("do")
             coin.favourite.remove(user)
             if user.portfolio_set.filter(coin=coin).exists():
-                print("do4")
                 Portfolio.objects.get(owner=user, coin=coin).delete()
 
         else:
             coin.favourite.add(user)
-            print("do3")
             if not user.portfolio_set.filter(coin=coin).exists():
-                print("do2")
                 Portfolio.objects.create(owner=user, coin=coin)
 
 
