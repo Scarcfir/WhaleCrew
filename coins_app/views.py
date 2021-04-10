@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 
-from coins_app.models import CoinsInfo
+from coins_app.models import CoinsInfo, Transaction
 from user_account_app.models import Portfolio, Profile
 
 
@@ -18,6 +18,8 @@ class AddToFavoriteView(View):
             coin.favourite.remove(user)
             if user.portfolio_set.filter(coin=coin).exists():
                 Portfolio.objects.get(owner=user, coin=coin).delete()
+                tran = Transaction.objects.filter(profile=user.id)
+                tran.delete()
 
         else:
             coin.favourite.add(user)

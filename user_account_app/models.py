@@ -12,7 +12,6 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'{self.user.email}'
-
 class PasswordRstToken(models.Model):
     token = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
