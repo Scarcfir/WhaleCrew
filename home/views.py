@@ -36,7 +36,7 @@ class IndexView(View):
                     CoinsInfo.objects.create(name=name, symbol=symbol, price=price,
                                              usd_market_cap=usd_market_cap, usd_24h_vol=usd_24h_vol)
                 except IntegrityError:
-                    print(name, " couldn't add")
+                    pass
             else:
                 crypto_to_update = CoinsInfo.objects.get(name=name)
                 crypto_to_update.price = price

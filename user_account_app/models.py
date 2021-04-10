@@ -12,6 +12,8 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'{self.user.email}'
+
+
 class PasswordRstToken(models.Model):
     token = models.CharField(max_length=255)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -32,7 +34,7 @@ class Portfolio(models.Model):
         return \
             float(format((Transaction.objects.filter(profile=self.owner.profile, coin__id=self.coin.id).aggregate(
                 amount=Sum('quantity'))[
-                'amount'] or 0), '.2f'))
+                              'amount'] or 0), '.2f'))
 
     @property
     def current_value_of_holdings(self):
@@ -55,4 +57,3 @@ class Portfolio(models.Model):
             average_purchase_value += i.price * i.quantity
         average_purchase_value = '{:.2f}'.format(average_purchase_value)
         return float(format(float(actual_holdings) - float(average_purchase_value), '.2f'))
-

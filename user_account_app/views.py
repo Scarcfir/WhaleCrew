@@ -18,6 +18,7 @@ class SingUp(View):
     """
     Class View to Sing Up new User.
     """
+
     def get(self, request):
         form = RegisterForm()
         return render(request, 'Sing_Up.html', {'form': form})
@@ -61,6 +62,7 @@ class ForgotPass(View):
     """
     Class view to remind password for Users
     """
+
     def get(self, request):
         form = ForgotPassword()
         return render(request, 'ForgotPassword.html', {'form': form})
@@ -85,10 +87,11 @@ class ForgotPass(View):
             html_message = render_to_string("reset_password.html", context)
             message = f"Hi, please reset your password with this link: {link}"
             try:
-                send_mail("Password Reset Requested", message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False, html_message=html_message)
+                send_mail("Password Reset Requested", message, settings.EMAIL_HOST_USER, [user.email],
+                          fail_silently=False, html_message=html_message)
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
-        return redirect('Forgot_Pass') #TODO Reset
+        return redirect('Forgot_Pass')  # TODO Reset
 
 
 def resetPasswordView(request, token):
@@ -120,6 +123,7 @@ class LoginView(View):
     """
     Base class view to Log in the User
     """
+
     def get(self, request):
         form = LoginForm()
         return render(request, 'login.html', {'form': form})
@@ -141,6 +145,7 @@ class LogoutView(View):
     """
     Base class View to log
     """
+
     def get(self, request):
         logout(request)
         return redirect('NewsList')
@@ -150,6 +155,7 @@ class Contact(View):
     """
     Base class view to contact form.
     """
+
     def get(self, request):
         return render(request, "contact.html")
 
@@ -171,6 +177,7 @@ class PortfolioView(View):
     """
     Base class view for authenticated User. View show the favourite's User coins , balance and allowed to do the Transaction.
     """
+
     def get(self, request):
         if not request.user.is_authenticated:
             return redirect('Login')
@@ -182,13 +189,19 @@ class PortfolioView(View):
         return render(request, 'portfolio.html', context)
 
     def post(self, request):
+
         user = request.user
-        buy_price = request.POST['price_act']
-        buy_price = buy_price.replace(",", ".")
-        quantity = request.POST['amount']
-        quantity = quantity.replace(",", ".")
-        buy_price = buy_price.replace(",", ".")
+        buy_price = (request.POST['price_act']).replace(",", ".")
+        quantity = (request.POST['amount']).replace(",", ".")
         coin_id = request.POST['id_coin']
+
+        """If User try to sell more than has got, the Balance will be 0"""
+
+        actual_coin_quantity = Portfolio.objects.get(owner=request.user, coin=coin_id).quantity
+        print(actual_coin_quantity - float(quantity))
+        if actual_coin_quantity + float(quantity) <= 0:
+            quantity = - actual_coin_quantity
+
         coin = CoinsInfo.objects.get(id=coin_id)
         t = Transaction.objects.create(profile=user.profile, coin=coin, quantity=quantity, price=buy_price)
         t.save()
