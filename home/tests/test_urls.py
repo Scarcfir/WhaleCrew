@@ -65,7 +65,7 @@ def test_user_login(client, create_test_user, user_data):
 
 
 @pytest.mark.django_db
-def test_add_studio(client, article, user_with_permissions, article_data):
+def test_add_article(client, article, user_with_permissions, article_data):
     client.force_login(user_with_permissions)
     response = client.post(reverse('AddArticle'), article_data)
     assert response.status_code == 302
