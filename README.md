@@ -1,7 +1,7 @@
 # WhaleCrew
 In general, this Django app might be the website for users and holders of cryptocurrencies. In particular, the app was created for the final project od CodersLAB - programming school. That's why you may find here few customized elements, like the logo on the home page which you can see on the screenshot below.
 
-![Home Page](WhaleCrew/static/readme/[....])
+![Home Page](static/readme/indexpage.PNG)
 
 ## Start
 
