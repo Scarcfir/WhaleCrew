@@ -20,30 +20,31 @@ Cryptocurrencies page
 ### Main page:
 You can see there a list of crypto coin with all of their informations downloaded with the binance api and coingecko api.
 Authorized user also can see the favourite column in the table. 
-![IndexPage](WhaleCrew/static/readme/[....])
+![IndexPage](static/readme/indexpage.PNG)
 ### Log in Page:
 New user can create the profile, can remaind password and log in. 
 
-![LogIn](WhaleCrew/static/readme/[....])
+![LogIn](static/readme/login.PNG)
 ### Forget Password Page:
 By using the password reminder, the user will receive an e-mail with a unique link to change the password by entering his e-mail
 
-![Forget Password](WhaleCrew/static/readme/[....])
+![Forget Password](static/readme/email.PNG)
 ### Contact Page:
 By using this page you can contact with me. 
 
-![Contact](WhaleCrew/static/readme/[....])
+![Contact](static/readme/contact.PNG)
 ### Footer:
 Footer includes the information about page and me. You can also sign up to newsletter.
 
-![Footer](WhaleCrew/static/readme/[....])
+![Footer](static/readme/footer.PNG)
 ### News Page:
 By using this page user(if User has got the permission) can create article. Also this page show all of created Articles.
 
-![News](WhaleCrew/static/readme/[....])
+![News](static/readme/newspage.PNG)
+![News](static/readme/createnews.PNG)
 ### Portfolio Page:
 The user can create his portfolio by add crypto coin to favourite on the indexpage. Next can add the transaction and see his balance.
 
-![Portfolio](WhaleCrew/static/readme/[....])
+![Portfolio](static/readme/portfolio.PNG)
 ## The end
 Thank you for your interest.
