@@ -9,6 +9,8 @@ from django.contrib.auth import authenticate, login, logout
 import re
 from django.core.mail import send_mail, BadHeaderError
 from django.conf import settings
+from django.views.generic import DetailView
+
 from coins_app.models import Transaction, CoinsInfo
 from user_account_app.forms import LoginForm, ForgotPassword, RegisterForm, ResetPassword
 from user_account_app.models import Profile, Portfolio, PasswordRstToken
@@ -91,7 +93,7 @@ class ForgotPass(View):
                           fail_silently=False, html_message=html_message)
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
-        return redirect('Forgot_Pass')  # TODO Reset
+        return redirect('Forgot_Pass')
 
 
 def resetPasswordView(request, token):
@@ -216,3 +218,8 @@ def validateEmail(email):
         if re.match(r'\b[\w.-]+@[\w.-]+.\w{2,4}\b', email) is not None:
             return 1
     return 0
+
+
+class UserProfile(View):
+    def get(self, request):
+        return render(request, 'user_profile.html')
