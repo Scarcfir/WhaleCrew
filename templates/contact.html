@@ -2,12 +2,12 @@
 {% block content %}
 <link rel="stylesheet" href="/static/css/user.css">
 <div class="container contact-form">
-            <div class="contact-image">
-                <img src="https://image.ibb.co/kUagtU/rocket_contact.png" alt="rocket_contact"/>
+
+            <div class="contact-image text-center">
+                <img src="https://img.pngio.com/message-png-88-images-in-collection-p-259866-png-images-pngio-message-png-512_512.png" width="256" height="256" alt="rocket_contact"/>
             </div>
 
             <form method="post" action="{% url 'Contact' %}">
-
                 {% csrf_token %}
 
                 <h3>Drop Us a Message</h3>

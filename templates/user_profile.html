@@ -3,7 +3,6 @@
 
 
     <style>
-
         .emp-profile {
             padding: 3%;
             margin-top: 3%;
@@ -48,12 +47,6 @@
         }
 
 
-        .proile-rating {
-            font-size: 12px;
-            color: #818182;
-            margin-top: 5%;
-        }
-
         .proile-rating span {
             color: #495057;
             font-size: 15px;
@@ -74,10 +67,6 @@
             border-bottom: 2px solid #0062cc;
         }
 
-        .profile-work {
-            padding: 14%;
-            margin-top: -15%;
-        }
 
         .profile-work p {
             font-size: 12px;
@@ -109,7 +98,7 @@
     </style>
 
     <div class="container emp-profile border mt-3 mb-3" id="profile">
-        <form method="POST">
+        <form method="POST" name="myForm" onsubmit="return(validate());">
             <div class="row">
                 <div class="col-md-4">
                     <div class="profile-img">
@@ -136,19 +125,78 @@
                                 <a class="nav-link active" id="home-tab" data-toggle="tab" href="#profile" role="tab"
                                    aria-controls="home" aria-selected="true">About</a>
                             </li>
-<!--
-                            <li class="nav-item">
-                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
-                                   aria-controls="profile" aria-selected="false">Timeline</a>
-                            </li>
--->
+                            <!--
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                                                               aria-controls="profile" aria-selected="false">Timeline</a>
+                                                        </li>
+                            -->
                         </ul>
                     </div>
                 </div>
 
                 <div class="col-md-2">
-                    <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"/>
+                    <input type="button" class="profile-edit-btn" name="btnAddMore" data-bs-toggle="modal"
+                           data-bs-target="#user_data" value="Edit Profile"/>
                 </div>
+
+                <!-- Modal -->
+                <div class="modal fade text-center" id="user_data" tabindex="-1" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Edit your profile</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                            </div>
+
+                            <div class="modal-body">
+
+                                <form method="post">
+                                    {% csrf_token %}
+
+                                    <div class="mb-3">
+                                        <label for="name" class="col-form-label ">Full Name: </label>
+                                        <input name="surrname" type="text" class="form-control" id="name"
+                                               value="Jan Kowalski">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="phone" class="col-form-label">Phone number: format [+XX-XXX-XXX-XXX]</label>
+                                        <input name="phonenumber" type="text" class="form-control" id="phone"
+                                               value="+48-884-302-100"
+                                               pattern="[+][0-9]{2}-[0-9]{3}-[0-9]{3}-[0-9]{3}">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="short_info" class="col-form-label">Short information: </label>
+                                        <input name="info" type="text" class="form-control" id="short_info"
+                                               value="I'am the BOSS">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="bio" class="col-form-label ">Bio: </label><br>
+                                        <input name="bio_info" type="text" class="form-control" id="bio"
+                                               value="I have been an investor for 3 years">
+                                    </div>
+
+
+                                    <input type="submit" id="submit-form" class="btnContact text-center" value="Save"/>
+                                </form>
+
+                            </div>
+
+                            <div class="modal-footer">
+
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
             </div>
             <div class="row">
@@ -204,5 +252,38 @@
             </div>
         </form>
     </div>
+
+    <script>
+
+        function validate() {
+            if (document.myForm.name.value == "") {
+                alert("Please provide your name!");
+                document.myForm.name.focus();
+                return false;
+            }
+
+            if (document.myForm.phonenumber.value == "") {
+                alert("Please provide your phone number!");
+                document.myForm.phonenumber.focus();
+                return false;
+            }
+
+            if (document.myForm.short_info.value == "") {
+                alert("Please provide your short description!");
+                document.myForm.short_info.focus();
+                return false;
+            }
+
+            if (document.myForm.bio.value == "") {
+                alert("Please provide your Bio!");
+                document.myForm.bio.focus();
+                return false;
+            }
+
+            return true;
+        }
+
+    </script>
+
 
 {% endblock %}

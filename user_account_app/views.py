@@ -134,7 +134,6 @@ class LoginView(View):
         form = LoginForm()
         return render(request, 'login.html', {'form': form})
 
-
     def post(self, request):
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -238,3 +237,18 @@ class UserProfile(View):
 
         ctx = {'profile': profile_data}
         return render(request, 'user_profile.html', ctx)
+
+    def post(self, request):
+        user = request.user
+        short_info = request.POST['info']
+        bio = request.POST['bio_info']
+        phone = request.POST['phonenumber']
+        name = request.POST['surrname']
+        profile_data = Profile.objects.get(user=user)
+        profile_data.short_info = short_info
+        profile_data.bio = bio
+        profile_data.name_surrname = name
+        profile_data.phone_number = phone
+        profile_data.save()
+
+        return redirect('UserProfile')
