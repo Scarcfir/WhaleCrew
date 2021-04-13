@@ -19,7 +19,7 @@ class NewsArticle(models.Model):
         """
         Return the url of article.
         """
-        return f"/News/{self.id}"
+        return f"/news/{self.id}"
 
     def __str__(self):
         return f'{self.title}'

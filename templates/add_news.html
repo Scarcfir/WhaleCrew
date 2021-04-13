@@ -9,6 +9,9 @@
 
             {% csrf_token %}
             <center><h3>Create News</h3></center>
+            {% if error_photo %}
+            <h3 class="text-center"  style="color:red"> Error "add photo file" try to add other. </h3>
+           {% endif %}
             {% if perm %}
             <h3 class="text-center"  style="color:red"> You don't have permission to add article </h3>
            {% endif %}
@@ -28,8 +31,8 @@
                     <br>
                     Wybierz zdjęcie:
                     <br>
-                    <center><input type="file" name="photo" class="form-control" id="customFile" style="width: 500px; "
-                                   accept="image/png, image/jpeg, image/jpg"></center>
+                    <center><input type="file" name="photo2" class="form-control" id="customFile" style="width: 500px; "
+                                                  accept="image/png, image/jpeg, image/jpg"  ></center>
 
                 </div>
 

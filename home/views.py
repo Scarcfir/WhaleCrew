@@ -1,5 +1,6 @@
 from django.db import IntegrityError
 from django.shortcuts import render, redirect
+from django.utils.datastructures import MultiValueDictKeyError
 from django.views import View
 from django.core.paginator import Paginator
 from footer_app.models import Newsletter
@@ -102,7 +103,7 @@ class AddArticleView(View):
 
     def get(self, request):
         user = request.user
-        context = {'perm': True}
+        context = {'perm': True, 'error': False}
         return render(request, "add_news.html", context)
 
     def post(self, request):
@@ -111,12 +112,16 @@ class AddArticleView(View):
             title = request.POST['Title']
             short_desc = request.POST['ShortDesc']
             desc = request.POST['Text']
-            photo_file = request.FILES['photo']
+            try:
+                photo_file = request.FILES['photo2']
+            except MultiValueDictKeyError:
+                context = {'perm': False, 'error_photo': True}
+                return render(request, "add_news.html", context)
             obj = News.objects.create(title=title, short_desc=short_desc, description=desc, picture_file=photo_file)
             obj.save()
             return redirect('NewsList')
         else:
-            context = {'perm': False}
+            context = {'perm': False, 'error': False}
             return render(request, "add_news.html", context)
 
 
