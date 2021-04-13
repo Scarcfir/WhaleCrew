@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="/static/css/user.css">
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <script src="https://kit.fontawesome.com/885fc84cf9.js" crossorigin="anonymous"></script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
 
@@ -26,52 +27,59 @@
 <!-- //--------------------------- Navigation Bar -------------------------// -->
 
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-    <!-- Brand/logo -->
-    <a class="navbar-brand" href="{% url 'IndexPage' %}">
-        <img src="/static/logo.jpeg" alt="logo" width="80" height="50" class="d-inline-block">
-    </a>
+    <div class="container-fluid">
+        <!-- Brand/logo -->
+        <div class="col-md-1">
+            <ul class="nav navbar-nav float-left">
+                <a class="navbar-brand" href="{% url 'IndexPage' %}">
+                    <img src="/static/logo.jpeg" alt="logo" width="80" height="50" class="d-inline-block">
+                </a>
+            </ul>
+        </div>
+        <!-- Links -->
+        <div class="col-md-9">
+            <ul class="nav navbar-nav float-left">
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'IndexPage' %}">Cryptocurrency rate</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'NewsList' %}">News</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'AddArticle' %}">Add News</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'PortfolioView' %}">Portfolio</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="{% url 'Contact' %}">Contact</a>
+                </li>
+            </ul>
+        </div>
+    <div class="col-md-4">
+        <ul class="navbar-nav">
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'UserProfile' %}"><i class="far fa-user-circle"></i> Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'Logout' %}"><i class="fas fa-door-open"></i> Logout</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'Login' %}"><i class="fas fa-sign-in-alt"></i> Log In</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'Sing_up' %}"><i class="fas fa-user-plus"></i> Sing Up</a>
+                </li>
 
-    <!-- Links -->
 
-    <ul class="navbar-nav">
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'IndexPage' %}">Cryptocurrency rate</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'NewsList' %}">News</a>
-        </li>
-        {% if user.is_authenticated %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'AddArticle' %}">Add News</a>
-            </li>
-        {% endif %}
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'PortfolioView' %}">Portfolio</a>
-        </li>
-
-    </ul>
-
-
-    <ul class="navbar-nav ">
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'Contact' %}">Contact</a>
-        </li>
-        {% if user.is_authenticated %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'Logout' %}">Logout</a>
-            </li>
-        {% else %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'Login' %}">Log In</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'Sing_up' %}">Sing Up</a>
-            </li>
-
-        {% endif %}
-
-    </ul>
-
+            {% endif %}
+        </ul>
+    </div>
+    </div>
 </nav>
 
 
@@ -156,7 +164,7 @@
                     <!--Grid column-->
                     <div class="col-auto">
                         <!-- Submit button -->
-                       <button type="submit" class="btn btn-outline-light mb-4">
+                        <button type="submit" class="btn btn-outline-light mb-4">
                             Subscribe
                         </button>
                     </div>

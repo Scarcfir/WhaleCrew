@@ -113,7 +113,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="profile-img">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS52y5aInsxSm31CvHOFHWujqUx_wWTS9iM6s7BAm21oEN_RiGoog"
+                        <img src="/static/images/users_profile_photo/no-image.png"
                              alt=""/>
                         <div class="file btn btn-lg btn-primary">
                             Change Photo
@@ -124,10 +124,10 @@
                 <div class="col-md-5">
                     <div class="profile-head">
                         <h5>
-                            Kshiti Ghelani
+                            {{ profile.name_surrname }}
                         </h5>
                         <h6>
-                            Info About You
+                            {{ profile.short_info }}
                         </h6>
 
                         <ul class="nav nav-tabs mt-5" id="myTab" role="tablist">
@@ -163,7 +163,7 @@
                                     <label>User Id</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <p>Kshiti123</p>
+                                    <p>{{ profile.user.id }}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -171,7 +171,7 @@
                                     <label>Name</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <p>Kshiti Ghelani</p>
+                                    <p>{{ profile.name_surrname }}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -179,7 +179,7 @@
                                     <label>Email</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <p>kshitighelani@gmail.com</p>
+                                    <p>{{ profile.user.email }}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -187,7 +187,7 @@
                                     <label>Phone</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <p>123 456 7890</p>
+                                    <p>{{ profile.phone_number }}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -195,7 +195,7 @@
                                     <label>Your Bio</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <p>Your detail description</p>
+                                    <p>{{ profile.bio }}</p>
                                 </div>
                             </div>
                         </div>

@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
-from django.urls import reverse
+from phone_field import PhoneField
 
 from coins_app.models import Transaction, CoinsInfo
 
@@ -9,6 +9,10 @@ from coins_app.models import Transaction, CoinsInfo
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     transactions = models.ManyToManyField("coins_app.CoinsInfo", through="coins_app.Transaction")
+    short_info = models.CharField(max_length=30, default="None")
+    bio = models.CharField(max_length=255, default="None")
+    phone_number = PhoneField(blank=True, help_text='Contact phone number')
+    name_surrname = models.CharField(max_length=30, default="None")
 
     def __str__(self):
         return f'{self.user.email}'

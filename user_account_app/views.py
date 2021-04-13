@@ -44,7 +44,10 @@ class SingUp(View):
                     u.save()
                     p = Profile.objects.create(user=u)
                     p.save()
-                    return render(request, 'welcome.html', {'user': username})
+                    user = authenticate(username=username, password=password)
+                    if user is not None:
+                        login(request, user)
+                    return redirect('UserProfile')
                 else:
                     if not mail:
                         error_mail = 1
@@ -57,7 +60,8 @@ class SingUp(View):
                     return render(request, 'Sing_Up.html',
                                   {'form': form, 'error_mail': error_mail, 'error_user': error_username})
         else:
-            return render(request, 'Sing_Up.html', {'form': form})
+
+            return render(request, 'user_profile.html', {'form': form})
 
 
 class ForgotPass(View):
@@ -130,14 +134,14 @@ class LoginView(View):
         form = LoginForm()
         return render(request, 'login.html', {'form': form})
 
+
     def post(self, request):
         form = LoginForm(request.POST)
         if form.is_valid():
             user = authenticate(request, **form.cleaned_data)
             if user is not None:
                 login(request, user)
-                redirect_url = request.GET.get('next', 'IndexPage')
-                return redirect(redirect_url)
+                return redirect('UserProfile')
             else:
                 tekst = 1
                 return render(request, 'login.html', {'tekst': tekst, 'form': form})
@@ -221,5 +225,16 @@ def validateEmail(email):
 
 
 class UserProfile(View):
+    """
+    Base class view for authenticated User. View show the User Profile.
+    """
+
     def get(self, request):
-        return render(request, 'user_profile.html')
+        user = request.user
+        if not user.is_authenticated:
+            return redirect('Login')
+
+        profile_data = Profile.objects.get(user=user)
+
+        ctx = {'profile': profile_data}
+        return render(request, 'user_profile.html', ctx)
